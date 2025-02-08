@@ -10,6 +10,7 @@ import {
 import LottieView from "lottie-react-native";
 import CustomText from "../../components/UI/CustomText";
 import Colors from "../../utils/Colors";
+import { AppColors } from "../../styles";
 
 const { height } = Dimensions.get("window");
 
@@ -75,7 +76,7 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 20,
-    backgroundColor: Colors.lighter_green,
+    backgroundColor: AppColors.primary,
     width: 200,
     height: 45,
     paddingVertical: 10,

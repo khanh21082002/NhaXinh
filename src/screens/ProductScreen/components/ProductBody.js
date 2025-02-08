@@ -6,7 +6,7 @@ import {
   Keyboard,
   SectionList,
 } from 'react-native';
-import Animated, { Value } from 'react-native-reanimated';
+import Animated, { useSharedValue , useAnimatedScrollHandler } from 'react-native-reanimated';
 //Color
 import Colors from '../../../utils/Colors';
 import HorizontalItem from './HorizontalItem';
@@ -14,8 +14,9 @@ import CustomText from '../../../components/UI/CustomText';
 import { Header } from './Header';
 //PropTypes check
 import PropTypes from 'prop-types';
+import { AppColors } from '../../../styles';
 
-ITEM_HEIGHT = 100;
+const ITEM_HEIGHT = 100;
 
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList);
 
@@ -24,16 +25,19 @@ export const ProductBody = ({
   productsFilter,
   searchFilterFunction,
 }) => {
-  const DATA = [];
-  const bracelets = productsFilter.filter(
-    (bracelet) => bracelet.type === 'bracelet',
-  );
-  const rings = productsFilter.filter((ring) => ring.type === 'ring');
-  const stones = productsFilter.filter((stone) => stone.type === 'stone');
-  DATA.push({ title: 'Vòng Chuối Ngọc', data: bracelets });
-  DATA.push({ title: 'Nhẫn Ruby', data: rings });
-  DATA.push({ title: 'Đá Quý', data: stones });
-  const scrollY = new Value(0);
+  const groupedProducts = productsFilter.reduce((acc, item) => {
+    if (!acc[item.category]) {
+      acc[item.category] = [];
+    }
+    acc[item.category].push(item);
+    return acc;
+  }, {});
+
+  const DATA = Object.keys(groupedProducts).map((category) => ({
+    title: category, // Hiển thị tên danh mục
+    data: groupedProducts[category], // Danh sách sản phẩm trong danh mục
+  }));
+  const scrollY = useSharedValue(0);
   const sectionListRef = useRef(null);
   // const scrollToSection = (index) => {
   //   sectionListRef.current.scrollToLocation({
@@ -56,6 +60,12 @@ export const ProductBody = ({
   //   setIndex(sectionIndex);
   // };
 
+  const onScroll = useAnimatedScrollHandler({
+    onScroll: (event) => {
+      scrollY.value = event.contentOffset.y;
+    },
+  });
+
   return (
     <View style={styles.container}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -72,7 +82,7 @@ export const ProductBody = ({
       ) : (
         <AnimatedSectionList
           sections={DATA} // REQUIRED: SECTIONLIST DATA
-          keyExtractor={(item) => item._id}
+          keyExtractor={(item, index) => item?._id ? item._id.toString() : `item-${index}`}
           ref={sectionListRef}
           renderSectionHeader={({ section: { title } }) => (
             <View style={styles.header}>
@@ -84,11 +94,7 @@ export const ProductBody = ({
           )}
           stickySectionHeadersEnabled={false}
           scrollEventThrottle={1}
-          onScroll={Animated.event(
-            [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-            { useNativeDriver: true },
-            // { listener: HandleScrollY, useNativeDriver: false }
-          )}
+          onScroll={onScroll}
           contentContainerStyle={{ marginTop: 90, paddingBottom: 100 }}
         />
       )}
@@ -149,8 +155,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
   },
   title: {
-    fontSize: 16,
+    fontSize: 24,
     fontWeight: '500',
-    color: Colors.lighter_green,
+    color: Colors.black,
   },
 });

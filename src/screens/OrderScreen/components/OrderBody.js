@@ -7,6 +7,7 @@ import Messages from "../../../messages/user";
 import OrderItem from "./OrderItem";
 //PropTypes check
 import PropTypes from "prop-types";
+import { AppColors } from "../../../styles";
 
 export class OrderBody extends React.PureComponent {
   render() {
@@ -69,9 +70,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     paddingHorizontal: 15,
     paddingVertical: 10,
-    backgroundColor: Colors.lighter_green,
+    backgroundColor: AppColors.primary,
     borderRadius: 5,
-    borderColor: Colors.lighter_green,
+    borderColor: AppColors.primary,
     marginTop: 10,
   },
 });

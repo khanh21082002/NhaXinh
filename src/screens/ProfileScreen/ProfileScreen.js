@@ -1,13 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, StyleSheet, Dimensions, Alert } from "react-native";
+import { View, StyleSheet, Dimensions, Alert, TouchableOpacity } from "react-native";
 //Redux
 import { useDispatch, useSelector } from "react-redux";
 //Action
 import { UploadProfilePic } from "../../reducers";
 import { EditButton, ProfilePic, ProfileBody } from "./components";
-import ActionSheet from 'react-native-action-sheet';  // Cập nhật sử dụng react-native-action-sheet
+// Import đúng từ react-native-actions-sheet
+import { SheetProvider, SheetManager } from "react-native-actions-sheet";
 //Loader
 import Loader from "../../components/Loaders/Loader";
+import { AppColors } from "../../styles";
+
 
 const { width, height } = Dimensions.get("window");
 
@@ -26,6 +29,7 @@ export const ProfileScreen = (props) => {
       unmounted.current = true;
     };
   }, []);
+
   const UploadProfile = async () => {
     try {
       await dispatch(UploadProfilePic(imageUri, filename, type));
@@ -42,51 +46,39 @@ export const ProfileScreen = (props) => {
     }
   };
 
-  const showActionSheet = () => {
-    const options = ['Option 1', 'Option 2', 'Cancel'];
-    const cancelButtonIndex = options.length - 1;
-    ActionSheet.showActionSheetWithOptions(
-      {
-        options,
-        cancelButtonIndex,
-      },
-      (buttonIndex) => {
-        if (buttonIndex !== cancelButtonIndex) {
-          console.log(`Selected button index: ${buttonIndex}`);
-        }
-      }
-    );
+  const triggerActionSheet = () => {
+    SheetManager.show("profile-pic-options");
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}></View>
-      {loading ? <Loader /> : <></>}
-      <View style={styles.profileContainer}>
-        <View style={styles.profileBox}>
-          <EditButton navigation={props.navigation} user={user} />
-          <ProfilePic
-            user={user}
-            imageUri={imageUri}
-            setImageUri={setImageUri}
-            setType={setType}
-            setFilename={setFilename}
-            setUploadButton={setUploadButton}
-          />
-          <ProfileBody
-            user={user}
-            uploadButton={uploadButton}
-            setUploadButton={setUploadButton}
-            setImageUri={setImageUri}
-            loading={loading}
-            UploadProfile={UploadProfile}
-          />
+    <SheetProvider context="global">
+      <View style={styles.container}>
+        <View style={styles.header}></View>
+        {loading ? <Loader /> : <></>}
+        <View style={styles.profileContainer}>
+          <View style={styles.profileBox}>
+            <EditButton navigation={props.navigation} user={user} />
+            <ProfilePic
+              user={user}
+              imageUri={imageUri}
+              setImageUri={setImageUri}
+              setType={setType}
+              setFilename={setFilename}
+              setUploadButton={setUploadButton}
+            />
+
+            <ProfileBody
+              user={user}
+              uploadButton={uploadButton}
+              setUploadButton={setUploadButton}
+              setImageUri={setImageUri}
+              loading={loading}
+              UploadProfile={UploadProfile}
+            />
+          </View>
         </View>
       </View>
-
-      {/* Action Sheet trigger */}
-      <Button title="Show Action Sheet" onPress={showActionSheet} />
-    </View>
+    </SheetProvider>
   );
 };
 

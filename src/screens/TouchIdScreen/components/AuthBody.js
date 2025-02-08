@@ -9,6 +9,7 @@ import TouchID from "react-native-touch-id";
 import * as Keychain from "react-native-keychain";
 // PropTypes check
 import PropTypes from "prop-types";
+import { AppColors } from "../../../styles";
 
 export const AuthBody = () => {
   const [isEnabled, setIsEnabled] = useState(false);
@@ -123,6 +124,6 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: "Roboto-Medium",
     fontSize: 15,
-    color: Colors.lighter_green,
+    color: AppColors.primary,
   },
 });

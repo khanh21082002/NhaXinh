@@ -3,15 +3,18 @@ import { View, StyleSheet, Dimensions } from "react-native";
 //Animatable
 import * as Animatable from "react-native-animatable";
 //icon
-import  AntDesign  from "react-native-vector-icons/AntDesign";
+import AntDesign from "react-native-vector-icons/AntDesign";
 //import CustomText
 import CustomText from "../../../components/UI/CustomText";
 //Color
 import Colors from "../../../utils/Colors";
 //number format
 import NumberFormat from "../../../components/UI/NumberFormat";
+//Star Rating Component
+
 //PropTypes check
 import PropTypes from "prop-types";
+import { StarRating } from "./StarRating";
 
 const { width, height } = Dimensions.get("window");
 
@@ -24,7 +27,7 @@ export const DetailBody = ({ item, color }) => {
         style={styles.footer_header}
       >
         <CustomText selectable={true} style={{ ...styles.title, color }}>
-          {item.filename}
+          {item.title}
         </CustomText>
         <NumberFormat
           style={{ color: "#fff", fontSize: 13 }}
@@ -32,23 +35,12 @@ export const DetailBody = ({ item, color }) => {
           color={color}
         />
       </Animatable.View>
+
+      {/* Gọi component StarRating */}
       <View style={{ flexDirection: "row", marginTop: 10 }}>
-        <Animatable.View animation="bounceIn" delay={1600}>
-          <AntDesign name="star" size={15} color={color} />
-        </Animatable.View>
-        <Animatable.View animation="bounceIn" delay={1700}>
-          <AntDesign name="star" size={15} color={color} />
-        </Animatable.View>
-        <Animatable.View animation="bounceIn" delay={1800}>
-          <AntDesign name="star" size={15} color={color} />
-        </Animatable.View>
-        <Animatable.View animation="bounceIn" delay={1900}>
-          <AntDesign name="star" size={15} color={color} />
-        </Animatable.View>
-        <Animatable.View animation="bounceIn" delay={2000}>
-          <AntDesign name="star" size={15} color={color} />
-        </Animatable.View>
+        <StarRating rating={item.rating.rate} color={color} />      
       </View>
+
       <Animatable.View
         animation="fadeInUpBig"
         delay={1000}

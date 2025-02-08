@@ -7,6 +7,7 @@ import Colors from "../../../utils/Colors";
 import CustomText from "../../../components/UI/CustomText";
 //PropTypes check
 import PropTypes from "prop-types";
+import { AppColors } from "../../../styles";
 
 const Detail = ({ icon, content }) => {
   const Icon =
@@ -31,7 +32,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     borderBottomWidth: 1,
-    borderBottomColor: Colors.grey,
+    borderBottomColor: AppColors.primary,
     height: 60,
     alignItems: "center",
   },

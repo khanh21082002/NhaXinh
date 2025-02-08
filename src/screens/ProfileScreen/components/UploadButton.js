@@ -4,6 +4,7 @@ import Colors from "../../../utils/Colors";
 import { Button } from "react-native-paper";
 //PropTypes check
 import PropTypes from "prop-types";
+import { AppColors } from "../../../styles";
 
 const UploadButton = ({
   uploadButton,
@@ -21,7 +22,7 @@ const UploadButton = ({
         style={{
           height: 50,
           justifyContent: "center",
-          backgroundColor: Colors.leave_green,
+          backgroundColor: AppColors.primary,
         }}
       >
         Update Profile Picture
@@ -37,7 +38,7 @@ const UploadButton = ({
             height: 50,
             marginTop: 10,
             justifyContent: "center",
-            backgroundColor: Colors.leave_green,
+            backgroundColor: AppColors.primary,
           }}
         >
           Cancel

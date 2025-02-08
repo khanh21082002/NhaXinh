@@ -13,6 +13,7 @@ import "moment/min/locales";
 import PropTypes from "prop-types";
 import CustomText from "../../../components/UI/CustomText";
 import Steps from "../../../components/UI/Steps";
+import { AppColors } from "../../../styles";
 
 moment.locale("vi");
 
@@ -126,7 +127,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   detailButtom: {
-    backgroundColor: Colors.lighter_green,
+    backgroundColor: AppColors.primary,
     alignItems: "center",
     paddingVertical: 10,
     borderRadius: 5,
@@ -137,7 +138,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   detail: {
-    color: Colors.lighter_green,
+    color: AppColors.primary,
   },
   steps: {
     width: "100%",

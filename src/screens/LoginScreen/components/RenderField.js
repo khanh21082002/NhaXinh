@@ -4,7 +4,8 @@ import { TextInput } from "react-native-paper";
 //Colors
 import Colors from "../../../utils/Colors";
 import CustomText from "../../../components/UI/CustomText";
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/Feather';
+import { AppColors } from "../../../styles";
 
 export default renderField = ({
   label,
@@ -20,26 +21,40 @@ export default renderField = ({
   return (
     <View>
       <View>
+        <Icon
+          name={icon} // Sử dụng icon do Field truyền vào
+          size={20}
+          color={AppColors.primary}
+          style={{
+            position: "absolute",
+            top: 23,
+            left: 18,
+            zIndex: 10,
+          }}
+        />
         <TextInput
           placeholder={label}
           autoCapitalize='none'
           mode='outlined'
           clearButtonMode={passIcon ? "never" : "always"}
-          selectionColor={Colors.leave_green}
-          theme={{ colors: { primary: Colors.leave_green } }}
+          selectionColor={AppColors.primary}
+          theme={{
+            roundness: 10,
+            colors: { primary: AppColors.primary }
+          }}
           left={
             <TextInput.Icon
               name={icon}
               size={24}
-              color={Colors.lighter_green}
+              color={AppColors.primary}
               style={{ paddingRight: 10 }}
             />
           }
           style={{
-            fontSize: 14,
-            backgroundColor: "transparent",
+            fontSize: 12,
+            backgroundColor: AppColors.blackLight,
             marginVertical: 5,
-            // paddingHorizontal: 5,
+
           }}
           keyboardType={keyboardType}
           onChangeText={onChange}
@@ -47,16 +62,16 @@ export default renderField = ({
           {...restInput}
         />
         {passIcon ? (
-          <MaterialCommunityIcons
+          <Icon
             name={showPass ? "eye" : "eye-off"}
             size={24}
-            color={Colors.lighter_green}
+            color={AppColors.primary}
             onPress={() => {
               setShowPass((prev) => !prev);
             }}
             style={{
               position: "absolute",
-              top: "40%",
+              top: "35%",
               right: 10,
               zIndex: 100,
             }}

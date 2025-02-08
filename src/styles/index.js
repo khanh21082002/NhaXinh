@@ -12,6 +12,7 @@ import AppSizes from './sizes';
 import AppColors from './colors';
 import AppFonts from './fonts';
 import AppStyles from './common';
+import { black } from 'react-native-paper/lib/typescript/styles/themes/v2/colors';
 
 const { width } = Dimensions.get('window');
 
@@ -26,6 +27,7 @@ const AppColorsCustom = {
   secondary: '#6c757d',
   background: '#ffffff',
   yellowLight: '#533C12',
+  blackLight: '#F2F0F1',
 };
 
 // Typography Styles

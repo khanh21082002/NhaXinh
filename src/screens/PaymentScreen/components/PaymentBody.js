@@ -9,6 +9,7 @@ import CustomText from "../../../components/UI/CustomText";
 import Colors from "../../../utils/Colors";
 //PropTypes check
 import PropTypes from "prop-types";
+import { AppColors } from "../../../styles";
 
 const { width } = Dimensions.get("window");
 
@@ -20,7 +21,7 @@ export const PaymentBody = ({ navigation, payByCard, setPayByCard, token }) => {
         <View style={styles.option}>
           <Checkbox
             status={!payByCard ? "checked" : "unchecked"}
-            color={Colors.lighter_green}
+            color={AppColors.primary}
             onPress={() => {
               setPayByCard(false);
             }}
@@ -28,7 +29,7 @@ export const PaymentBody = ({ navigation, payByCard, setPayByCard, token }) => {
           <MaterialCommunityIcons
             name='cash'
             size={40}
-            color={Colors.lighter_green}
+            color={AppColors.primary}
             style={{ marginLeft: 10 }}
           />
           <CustomText style={styles.optionText}>Thanh toán tiền mặt</CustomText>
@@ -36,14 +37,14 @@ export const PaymentBody = ({ navigation, payByCard, setPayByCard, token }) => {
         <View style={styles.option}>
           <Checkbox
             status={payByCard ? "checked" : "unchecked"}
-            color={Colors.lighter_green}
+            color={AppColors.primary}
             onPress={() => navigation.navigate("AddCreditCardScreen")}
             // containerStyle={{ padding: 5 }}
           />
           <MaterialCommunityIcons
             name='credit-card-outline'
             size={35}
-            color={Colors.lighter_green}
+            color={AppColors.primary}
             style={{ marginLeft: 10 }}
           />
           <View style={styles.cardContainer}>

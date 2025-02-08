@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
+import { View, StyleSheet, Dimensions, TouchableOpacity , Image } from "react-native";
 //Text
 import CustomText from "../../../components/UI/CustomText";
 //Icon
@@ -9,6 +9,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Colors from "../../../utils/Colors";
 //PropTypes check
 import PropTypes from "prop-types";
+import App from "../../../../App";
+import { AppColors } from "../../../styles";
 
 const { height } = Dimensions.get("window");
 
@@ -20,10 +22,11 @@ export const Header = ({ navigation, user, carts }) => {
           navigation.goBack();
         }}
       >
-        <Ionicons
-          name='ios-arrow-back'
-          size={30}
-          color={Colors.lighter_green}
+        <Image
+          source={require('../../../assets/images/icons/arrow_back.png')}
+          style={{ width: 35, height: 35 }}
+          borderRadius={8}
+          backgroundColor={AppColors.primaryLight}
         />
       </TouchableOpacity>
       <CustomText style={styles.titleHeader}>
@@ -63,7 +66,7 @@ const styles = StyleSheet.create({
   },
   titleHeader: {
     textAlign: "center",
-    color: Colors.lighter_green,
+    color: AppColors.primary,
     fontSize: 20,
     paddingBottom: 5,
     fontFamily: "Roboto-Medium",

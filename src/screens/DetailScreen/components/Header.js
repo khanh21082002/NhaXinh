@@ -7,8 +7,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
+  Image
 } from "react-native";
-import Ionicons from 'react-native-vector-icons/Ionicons';
 //Animatable
 import * as Animatable from "react-native-animatable";
 import ShareItem from "../../../components/UI/ShareItem";
@@ -16,6 +16,7 @@ import ShareItem from "../../../components/UI/ShareItem";
 import CustomText from "../../../components/UI/CustomText";
 //Color
 import Colors from "../../../utils/Colors";
+import { AppColors } from "../../../styles";
 
 const { height } = Dimensions.get("window");
 
@@ -50,22 +51,25 @@ export const Header = ({ navigation, scrollY, item }) => {
           }}
           style={styles.goBackIcon}
         >
-          <View>
-            <Ionicons name="ios-arrow-back" size={25} color="#fff" />
-          </View>
+          <Image
+            source={require('../../../assets/images/icons/arrow_back.png')}
+            style={{ width: 35, height: 35 }}
+            borderRadius={8}
+            backgroundColor={AppColors.primaryLight}
+          />
         </TouchableOpacity>
         <Animated.View style={{ opacity: headerOpacity }}>
           <CustomText
             style={{ fontSize: 16, color: "#fff", fontWeight: "500" }}
           >
-            {item.filename}
+            {item.title}
           </CustomText>
         </Animated.View>
         <View style={styles.shareIcon}>
           <ShareItem
-            imageURL={item.url}
-            title={item.filename}
-            message={item.filename}
+            imageURL={item.image}
+            title={item.title}
+            message={item.title}
           />
         </View>
       </View>
@@ -75,7 +79,7 @@ export const Header = ({ navigation, scrollY, item }) => {
           top: 0,
           left: 0,
           right: 0,
-          backgroundColor: Colors.lighter_green,
+          backgroundColor: AppColors.primary,
           overflow: "hidden",
           opacity: headerOpacity,
           height: HEADER_MAX_HEIGHT,
@@ -83,7 +87,7 @@ export const Header = ({ navigation, scrollY, item }) => {
         }}
       ></Animated.View>
       <Animated.Image
-        source={{ uri: item.url }}
+        source={{ uri: item.image }}
         style={[
           styles.image,
           {

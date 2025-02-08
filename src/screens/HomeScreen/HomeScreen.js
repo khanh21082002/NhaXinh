@@ -19,7 +19,11 @@ const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 // height
 const { height } = Dimensions.get('window');
 
+
+
 export const HomeScreen = ({ navigation }) => {
+
+
   const dispatch = useDispatch();
   // Header Animation
   let scrollY = useSharedValue(0);
@@ -37,9 +41,7 @@ export const HomeScreen = ({ navigation }) => {
       }
     };
     fetching();
-  }, [user.userid]);
-
-  console.log(products);
+  }, [user.id]);
 
   // Animated Scroll Handler
   const onScroll = useAnimatedScrollHandler({
@@ -48,17 +50,25 @@ export const HomeScreen = ({ navigation }) => {
     },
   });
 
+  const groupedProducts = products.reduce((acc, item) => {
+    if (!acc[item.category]) {
+      acc[item.category] = [];
+    }
+    acc[item.category].push(item);
+    return acc;
+  }, {});
+
   return (
     <Provider>
       {isLoading ? (
         <Skeleton />
       ) : (
         <View style={styles.container}>
-          <Header
+          {/* <Header
             scrollPoint={scrollY}
             navigation={navigation}
             products={products}
-          />
+          /> */}
           <Portal>
             <FloatButton />
           </Portal>
@@ -72,14 +82,13 @@ export const HomeScreen = ({ navigation }) => {
             )}
             scrollEventThrottle={1}
             onScroll={onScroll}
-            data={Categories}
-            keyExtractor={(item) => item.name}
+            data={Object.keys(groupedProducts)} 
+            keyExtractor={(item) => item} 
             renderItem={({ item }) => (
               <CategorySection
-                name={item.name}
-                bg={item.bg}
-                data={products}
-                navigation={navigation}
+              name={item} // `item` là category name
+              data={groupedProducts[item]} 
+              navigation={navigation}
               />
             )}
           />
@@ -105,6 +114,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.white,
+  },
+  banner: {
+    marginBottom: 10,
   },
   list: {
     width: '100%',

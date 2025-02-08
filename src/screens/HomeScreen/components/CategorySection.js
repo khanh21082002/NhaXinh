@@ -12,41 +12,43 @@ import Colors from "../../../utils/Colors";
 import { BlurView } from "@react-native-community/blur";
 //PropTypes check
 import PropTypes from "prop-types";
+import { AppColors } from "../../../styles";
 
 export class CategorySection extends React.PureComponent {
   render() {
-    const { data, name, bg, navigation } = this.props;
-    const rings = data.filter((ring) => ring.type === "ring");
-    const bracelets = data.filter((bracelet) => bracelet.type === "bracelet");
-    const stones = data.filter((stone) => stone.type === "stone");
+    const { data, name, navigation } = this.props;
+    const categorizedData = data.reduce((acc, item) => {
+      if (!acc[item.category]) {
+        acc[item.category] = [];
+      }
+      acc[item.category].push(item);
+      return acc;
+    }, {});
+
+
+    // Lấy danh sách sản phẩm theo name (danh mục)
     function getItems() {
-      const items =
-        name === "Vòng Thạch Anh"
-          ? bracelets
-          : name === "Đá Ruby"
-          ? stones
-          : rings;
-      return items;
+      return categorizedData[name] || [];
     }
     return (
       <View style={[styles.category]}>
-        <Image style={styles.background} source={bg} blurRadius={10} />
+        
         <View style={styles.titleHeader}>
           <CustomText style={styles.title}>{name}</CustomText>
         </View>
         <View style={styles.productList}>
           <FlatList
             data={getItems()}
-            keyExtractor={(item) => item._id}
+            keyExtractor={(item, index) => (item._id ? item._id.toString() : index.toString())}
             numColumns={2}
             columnWrapperStyle={styles.list}
             renderItem={({ item }) => {
               return (
                 <ProductItem
-                  key={item._id}
                   item={item}
                   navigation={navigation}
                 />
+                
               );
             }}
           />
@@ -55,9 +57,10 @@ export class CategorySection extends React.PureComponent {
           onPress={() => navigation.navigate("Product")}
           style={{ marginHorizontal: 10 }}
         >
-          <BlurView tint="light" intensity={100} style={styles.seeMore}>
+          {/* Sử dụng View với nền mặc định */}
+          <View style={styles.seeMore}>
             <CustomText style={styles.seeMoreText}>Xem Thêm</CustomText>
-          </BlurView>
+          </View>
         </TouchableOpacity>
       </View>
     );
@@ -77,6 +80,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     borderRadius: 5,
     overflow: "hidden",
+    backgroundColor: AppColors.primaryLight,
   },
   background: {
     position: "absolute",
@@ -92,7 +96,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
-    color: Colors.light_green,
+    color: AppColors.primary,
     fontWeight: "500",
   },
   list: {
@@ -104,7 +108,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   seeMore: {
-    // backgroundColor: "rgba(255, 255, 255, 0.9)",
+    backgroundColor: AppColors.primary,
     width: "100%",
     height: 45,
     borderRadius: 5,
@@ -113,6 +117,6 @@ const styles = StyleSheet.create({
   },
   seeMoreText: {
     fontSize: 14,
-    color: Colors.lighter_green,
+    color: AppColors.white,
   },
 });

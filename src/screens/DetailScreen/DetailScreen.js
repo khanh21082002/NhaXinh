@@ -14,6 +14,7 @@ import {
   Comments,
 } from './components';
 import { colorCheck } from '../../utils/Tools';
+import { AppColors } from '../../styles';
 
 export const DetailScreen = (props) => {
   const scrollY = new Animated.Value(0);
@@ -21,7 +22,7 @@ export const DetailScreen = (props) => {
   const { item } = props.route.params;
   const [message, setMessage] = useState('');
   const [showSnackbar, setShowSnackbar] = useState(false);
-  const [color, setColor] = useState(Colors.lighter_green);
+  const [color, setColor] = useState(AppColors.primary);
   //color
   const type = item.color;
   const [modalVisible, setModalVisible] = useState(false);

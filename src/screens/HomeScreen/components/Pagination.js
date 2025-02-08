@@ -3,6 +3,7 @@ import { View, Animated, StyleSheet, Dimensions } from "react-native";
 import Colors from "../../../utils/Colors";
 //PropTypes check
 import PropTypes from "prop-types";
+import { AppColors } from "../../../styles";
 
 const { height, width } = Dimensions.get("window");
 
@@ -75,7 +76,7 @@ const styles = StyleSheet.create({
     height: DOT_SIZE * 0.5,
     zIndex: 101,
     borderRadius: DOT_SIZE * 0.25,
-    backgroundColor: Colors.lighter_green,
+    backgroundColor: AppColors.primary,
   },
 });
 

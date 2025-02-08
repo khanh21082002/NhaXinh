@@ -25,7 +25,7 @@ export const fetchProducts = () => {
       const resData = await response.json();
       dispatch({
         type: FETCH_PRODUCTS,
-        products: resData.content,
+        products: resData.products || resData,
       });
     } catch (err) {
       throw err;

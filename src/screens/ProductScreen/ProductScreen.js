@@ -17,6 +17,7 @@ export const ProductScreen = (props) => {
     );
     setproductsFilter(data);
   };
+
   return (
     <View style={styles.container}>
       <ProductBody

@@ -4,17 +4,17 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
-  ActionSheetIOS,
   Platform,
 } from "react-native";
-//Color
-import  FontAwesome  from "react-native-vector-icons/FontAwesome";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Colors from "../../../utils/Colors";
 import { _pickImage } from "../../../utils/Tools";
 import CustomText from "../../../components/UI/CustomText";
-import { useActionSheet } from "react-native-action-sheet";
-//PropTypes check
+import { SheetManager } from "react-native-actions-sheet";
 import PropTypes from "prop-types";
+import { registerSheet } from 'react-native-actions-sheet';
+import '../../../utils/actionSheets';
+import { AppColors } from "../../../styles";
 
 export const ProfilePic = ({
   user,
@@ -24,50 +24,47 @@ export const ProfilePic = ({
   setType,
   setUploadButton,
 }) => {
-  const { showActionSheetWithOptions } = useActionSheet();
+  // Sửa lỗi gọi SheetManager mà không dùng ref
+  const UploadProfileHandler = async () => {
+    try {
+      const result = await SheetManager.show('profile-pic-options', {
+        payload: {
+          handler: async (buttonIndex) => {
 
-  const UploadProfileHandler = () => {
-    const options = ["Take Photo", "Choose From Library", "Cancel"];
+            let pickerResult;
+            if (buttonIndex === 0) {
+              pickerResult = await _pickImage('camera');
+            } else if (buttonIndex === 1) {
+              pickerResult = await _pickImage('library');
+            }
 
-    showActionSheetWithOptions(
-      {
-        options,
-        // destructiveButtonIndex: 2,
-        // cancelButtonIndex: 0,
-      },
-      async (buttonIndex) => {
-        let result;
-        if (buttonIndex === 2) {
-          return;
-        } else if (buttonIndex === 0) {
-          const data = await _pickImage("camera");
-          result = data;
-        } else if (buttonIndex === 1) {
-          const data = await _pickImage("library");
-          result = data;
-        }
-        if (!result.cancelled) {
-          let localUri = result.uri;
-          let filename = localUri.split("/").pop();
-          setImageUri(localUri);
-          setFilename(filename);
-          setType(result.type);
-          setUploadButton(false);
-        }
-      }
-    );
+            if (result && !result.cancelled) {
+              let localUri = result.uri;
+              let filename = localUri.split("/").pop();
+              setImageUri(localUri);
+              setFilename(filename);
+              setType(result.type);
+              setUploadButton(false);
+            }
+          }
+        },
+      });
+    } catch (error) {
+      console.error("Lỗi khi mở ActionSheet:", error);
+    }
   };
+
   return (
     <View>
       <View style={{ height: 50, alignItems: "center" }}>
         <Image
           style={styles.profilePic}
           source={
-            imageUri.length === 0
-              ? user.profilePicture.length === 0
-                ? require("../../../assets/images/defaultprofile.png")
-                : { uri: user.profilePicture }
-              : { uri: imageUri }
+            imageUri
+              ? { uri: imageUri }
+              : user.profilePicture
+                ? { uri: user.profilePicture }
+                : require("../../../assets/images/defaultprofile.png") // Default image
           }
         />
         <View
@@ -84,7 +81,7 @@ export const ProfilePic = ({
           </View>
         </View>
       </View>
-      <CustomText style={styles.userName}>{user.name}</CustomText>
+      <CustomText style={styles.userName}>{user.name.firstname + " " + user.name.lastname}</CustomText>
     </View>
   );
 };
@@ -97,6 +94,7 @@ ProfilePic.propTypes = {
   setType: PropTypes.func.isRequired,
   setUploadButton: PropTypes.func.isRequired,
 };
+
 const styles = StyleSheet.create({
   profilePic: {
     resizeMode: Platform.OS === "android" ? "cover" : "contain",
@@ -113,12 +111,14 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: Colors.leave_green,
+    backgroundColor:AppColors.primary,
   },
   userName: {
     fontSize: 20,
     marginTop: 10,
-    color: Colors.leave_green,
+    color: AppColors.primary,
     textAlign: "center",
   },
 });
+
+export default ProfilePic;

@@ -3,20 +3,21 @@ import { StyleSheet, View } from "react-native";
 import StepIndicator from "react-native-step-indicator";
 import Icon from "react-native-vector-icons/MaterialIcons";  // Sử dụng react-native-vector-icons thay vì @expo/vector-icons
 import Colors from "../../utils/Colors";
+import { AppColors } from "../../styles";
 
 const secondIndicatorStyles = {
   stepIndicatorSize: 30,
   currentStepIndicatorSize: 40,
   separatorStrokeWidth: 2,
   currentStepStrokeWidth: 1,
-  stepStrokeCurrentColor: Colors.lighter_green,
+  stepStrokeCurrentColor: AppColors.primary,
   stepStrokeWidth: 1,
   separatorStrokeFinishedWidth: 1,
   stepStrokeFinishedColor: "#ffffff",
-  stepStrokeUnFinishedColor: Colors.lighter_green,
-  separatorFinishedColor: Colors.lighter_green,
-  separatorUnFinishedColor: Colors.lighter_green,
-  stepIndicatorFinishedColor: Colors.lighter_green,
+  stepStrokeUnFinishedColor: AppColors.primary,
+  separatorFinishedColor: AppColors.primaryn,
+  separatorUnFinishedColor: AppColors.primary,
+  stepIndicatorFinishedColor: AppColors.primary,
   stepIndicatorUnFinishedColor: "#ffffff",
   stepIndicatorCurrentColor: "#ffffff",
 };
@@ -24,7 +25,7 @@ const secondIndicatorStyles = {
 const getStepIndicatorIconConfig = ({ position, stepStatus }) => {
   let iconConfig = {
     name: "feed",
-    color: stepStatus === "finished" ? "#ffffff" : Colors.lighter_green,
+    color: stepStatus === "finished" ? "#ffffff" : AppColors.primary,
     size: 14,
   };
 

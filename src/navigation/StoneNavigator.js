@@ -46,6 +46,7 @@ import { ProfileScreen } from '../screens/ProfileScreen';
 import { EditProfileScreen } from '../screens/ProfileScreen';
 // redux
 import { useSelector } from 'react-redux';
+import { AppColors } from '../styles';
 
 // create Navigator
 
@@ -167,7 +168,7 @@ export const HomeStackScreen = () => (
     <HomeStack.Screen
       name="Home"
       component={HomeScreen}
-      //animationEnabled: false , nằm trong option
+    //animationEnabled: false , nằm trong option
     />
     <HomeStack.Screen name="Detail" component={DetailScreen} />
     <HomeStack.Screen name="Cart" component={CartStackScreen} />
@@ -187,14 +188,17 @@ export const TabScreen = () => {
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused }) => {
           let iconName;
-          const color = focused ? Colors.lighter_green : Colors.grey;
+          const color = focused ? AppColors.primary : Colors.grey;
           if (route.name === 'HomeTab') {
             iconName = 'home';
           } else if (route.name === 'Favorite') {
             iconName = 'hearto';
           } else if (route.name === 'Cart') {
             iconName = 'shoppingcart';
+          } else if (route.name === 'Notification') {
+            iconName = 'notification';
           }
+
           return <AntDesign name={iconName} size={23} color={color} />;
         },
       })}
@@ -203,7 +207,7 @@ export const TabScreen = () => {
         height: 75,
         justifyContent: 'center',
       }}
-      activeColor={Colors.lighter_green}
+      activeColor={AppColors.primary}
       inactiveColor={Colors.grey}
     >
       <Tab.Screen
@@ -226,6 +230,13 @@ export const TabScreen = () => {
         options={() => ({
           tabBarLabel: 'Giỏ hàng',
           tabBarBadge: carts.items.length === 0 ? null : carts.items.length,
+        })}
+      />
+      <Tab.Screen
+        name="Notification"
+        component={CartStackScreen}
+        options={() => ({
+          tabBarLabel: 'Thông báo',
         })}
       />
     </Tab.Navigator>
@@ -276,7 +287,7 @@ export const DrawerNavigator = () => {
                 style={{
                   fontSize: 14,
                   fontWeight: '500',
-                  color: focused ? Colors.lighter_green : Colors.grey,
+                  color: focused ? AppColors.primary : Colors.grey,
                   fontFamily: 'Roboto-Medium',
                 }}
               >
@@ -287,7 +298,7 @@ export const DrawerNavigator = () => {
               <Icon
                 name={icon}
                 size={23}
-                color={focused ? Colors.lighter_green : Colors.grey}
+                color={focused ? AppColors.primary : Colors.grey}
               />
             ),
           })}
@@ -304,7 +315,7 @@ export const DrawerNavigator = () => {
                 style={{
                   fontSize: 14,
                   fontWeight: '500',
-                  color: focused ? Colors.lighter_green : Colors.grey,
+                  color: focused ? AppColors.primary : Colors.grey,
                   fontFamily: 'Roboto-Medium',
                 }}
               >
@@ -315,7 +326,7 @@ export const DrawerNavigator = () => {
               <Icon
                 name="login"
                 size={23}
-                color={focused ? Colors.lighter_green : Colors.grey}
+                color={focused ? AppColors.primary : Colors.grey}
               />
             ),
           })}
@@ -331,7 +342,7 @@ export const DrawerNavigator = () => {
                   style={{
                     fontSize: 14,
                     fontWeight: '500',
-                    color: focused ? Colors.lighter_green : Colors.grey,
+                    color: focused ? AppColors.primary : Colors.grey,
                     fontFamily: 'Roboto-Medium',
                   }}
                 >
@@ -339,10 +350,10 @@ export const DrawerNavigator = () => {
                 </CustomText>
               ),
               drawerIcon: ({ focused }) => (
-                <MaterialCommunityIcons
+                <Icon
                   name="security"
                   size={25}
-                  color={focused ? Colors.lighter_green : Colors.grey}
+                  color={focused ? AppColors.primary : Colors.grey}
                 />
               ),
             })}
@@ -356,7 +367,7 @@ export const DrawerNavigator = () => {
                   style={{
                     fontSize: 14,
                     fontWeight: '500',
-                    color: focused ? Colors.lighter_green : Colors.grey,
+                    color: focused ? AppColors.primary : Colors.grey,
                     fontFamily: 'Roboto-Medium',
                   }}
                 >
@@ -364,10 +375,10 @@ export const DrawerNavigator = () => {
                 </CustomText>
               ),
               drawerIcon: ({ focused }) => (
-                <MaterialCommunityIcons
-                  name="face-profile"
+                <Icon
+                  name="account"
                   size={25}
-                  color={focused ? Colors.lighter_green : Colors.grey}
+                  color={focused ? AppColors.primary : Colors.grey}
                 />
               ),
             })}
