@@ -72,14 +72,15 @@ const Signup = (props) => {
 
   const submit = async (values) => {
     try {
-      await dispatch(SignUpAct(values.username, values.email, values.password));
+      // await dispatch(SignUpAct(values.username, values.email, values.password));
       reset();
       if (!unmounted.current) {
         Alert.alert("Signup Successfully", "You can login now", [
           {
             text: "Okay",
             onPress: () => {
-              props.navigation.goBack();
+              // props.navigation.goBack();
+              props.navigation.navigate("OTPScreen", { email: values.email });
             },
           },
         ]);
@@ -164,19 +165,23 @@ const Signup = (props) => {
 
             <TouchableOpacity
               onPress={handleSubmit(submit)}
+              disabled={!props.valid || loading}
               style={{
                 marginVertical: 10,
                 alignItems: 'center',
-                backgroundColor: AppColors.primaryLight,
+                backgroundColor: props.valid ? AppColors.primary : AppColors.primaryLight,
                 borderRadius: 10,
                 paddingVertical: 5
               }}
             >
               <View style={styles.signIn}>
                 {loading ? (
-                  <ActivityIndicator size="small" color= {AppColors.yellowLight} />
+                  <ActivityIndicator size="small" color={AppColors.white} />
                 ) : (
-                  <CustomText style={styles.textSign}>Đăng ký</CustomText>
+                  <CustomText style={{
+                    ...styles.textSign,
+                    color: props.valid ? AppColors.white : AppColors.yellowLight, // Đổi màu chữ
+                  }}>Đăng ký</CustomText>
                 )}
               </View>
             </TouchableOpacity>
@@ -188,21 +193,21 @@ const Signup = (props) => {
             Hoặc đăng ký bằng
           </CustomText>
           <View style={styles.circleImage}>
-            <TouchableOpacity           
+            <TouchableOpacity
             >
               <Image
                 source={require('../../../assets/images/instagram.png')}
                 style={styles.img}
               />
             </TouchableOpacity>
-            <TouchableOpacity           
+            <TouchableOpacity
             >
               <Image
                 source={require('../../../assets/images/facebook.png')}
                 style={styles.img}
               />
             </TouchableOpacity>
-            <TouchableOpacity           
+            <TouchableOpacity
             >
               <Image
                 source={require('../../../assets/images/google.png')}
@@ -220,6 +225,7 @@ Signup.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   reset: PropTypes.func.isRequired,
 };
+
 const styles = StyleSheet.create({
   header: {
     marginTop: height * 0.1,
@@ -234,9 +240,9 @@ const styles = StyleSheet.create({
     height: 50,
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 5,
-    flexDirection: "row",
-    backgroundColor: AppColors.primaryLight,
+    // borderRadius: 5,
+    // flexDirection: "row",
+    // backgroundColor: AppColors.primaryLight,
   },
   title: {
     color: Colors.light_green,

@@ -2,14 +2,14 @@ import React from "react";
 import { View, StyleSheet, ImageBackground, Dimensions } from "react-native";
 import Colors from "../../utils/Colors";
 //Components
-import { LoginForm } from "./components";
+ import { OTPForm } from "./components";
 
 const { height, width } = Dimensions.get("window");
 
-export const LoginScreen = ({ navigation }) => {
+export const OTPScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <LoginForm navigation={navigation} />
+      <OTPForm navigation={navigation} />
     </View>
   );
 };

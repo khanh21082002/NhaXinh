@@ -1,12 +1,5 @@
 import React from "react";
 import { View, StyleSheet, Dimensions, TouchableOpacity , Image } from "react-native";
-//Text
-import CustomText from "../../../components/UI/CustomText";
-//Icon
-//import { Ionicons } from "@expo/vector-icons";
-import Ionicons from 'react-native-vector-icons/Ionicons';
-//Colors
-import Colors from "../../../utils/Colors";
 //PropTypes check
 import PropTypes from "prop-types";
 import App from "../../../../App";
@@ -29,15 +22,6 @@ export const Header = ({ navigation, user, carts }) => {
           backgroundColor={AppColors.primaryLight}
         />
       </TouchableOpacity>
-      <CustomText style={styles.titleHeader}>
-        Giỏ Hàng{" "}
-        {Object.keys(user).length === 0
-          ? ""
-          : carts.products?.length === 0
-          ? ""
-          : `(${carts.products?.length})`}
-      </CustomText>
-      <View style={{ width: 15 }} />
     </View>
   );
 };

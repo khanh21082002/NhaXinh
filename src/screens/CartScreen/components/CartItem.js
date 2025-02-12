@@ -12,7 +12,6 @@ import Colors from "../../../utils/Colors";
 //NumberFormat
 import NumberFormat from "../../../components/UI/NumberFormat";
 //Icon
-//import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import CustomText from "../../../components/UI/CustomText";
 //PropTypes check
@@ -20,11 +19,11 @@ import PropTypes from "prop-types";
 
 export class CartItem extends React.PureComponent {
   render() {
-    const { item, onAdd, onDes, onRemove } = this.props;
+    const { item, onAdd, onDes, onRemove  } = this.props;
     const AddItemHandler = async () => {
       await onAdd();
     };
-    const sum = +item.item.price * +item.quantity;
+    const sum = +item.product.price * +item.quantity;
     const checkDesQuantity = async () => {
       if (item.quantity == 1) {
         Alert.alert(
@@ -54,14 +53,14 @@ export class CartItem extends React.PureComponent {
               resizeMode: "stretch",
               borderRadius: 5,
             }}
-            source={{ uri: item.item.thumb }}
+            source={{ uri: item.product.image }}
           />
         </View>
         <View style={styles.right}>
           <View
             style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
-            <CustomText style={styles.title}>{item.item.filename}</CustomText>
+            <CustomText style={styles.title}>{item.product.title}</CustomText>
             <View>
               <TouchableOpacity onPress={onRemove}>
                 <Icon name='close' size={20} color='#000' />
@@ -69,18 +68,18 @@ export class CartItem extends React.PureComponent {
             </View>
           </View>
           <CustomText style={{ color: Colors.grey, fontSize: 12 }}>
-            Cung cấp bởi Cát Tường
+            Cung cấp bởi NhaXinh
           </CustomText>
           <NumberFormat price={sum.toString()} />
           <View style={styles.box}>
             <TouchableOpacity onPress={checkDesQuantity} style={styles.boxMin}>
-              <MaterialCommunityIcons name='minus' size={16} />
+              <Icon name='minus' size={16} />
             </TouchableOpacity>
             <View>
               <CustomText style={styles.boxText}>{item.quantity}</CustomText>
             </View>
             <TouchableOpacity onPress={AddItemHandler} style={styles.boxMin}>
-              <MaterialCommunityIcons name='plus' size={16} />
+              <Icon name='plus' size={16} />
             </TouchableOpacity>
           </View>
         </View>

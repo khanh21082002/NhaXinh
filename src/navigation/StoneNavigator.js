@@ -22,6 +22,7 @@ import { AuthScreen } from '../screens/AuthScreen';
 import { IntroScreen } from '../screens/IntroScreen';
 import { SignupScreen } from '../screens/SignupScreen';
 import { LoginScreen } from '../screens/LoginScreen';
+import { OTPScreen } from '../screens/OTPScreen';
 import { TouchIdScreen } from '../screens/TouchIdScreen';
 // Reset Screens
 import { ForgetPwScreen } from '../screens/ForgetPasswordScreen';
@@ -44,6 +45,7 @@ import { FinishOrderScreen } from '../screens/FinishOrderScreen';
 // Profile Screens
 import { ProfileScreen } from '../screens/ProfileScreen';
 import { EditProfileScreen } from '../screens/ProfileScreen';
+import { PersonalInfoScreen } from '../screens/PersonalInfo/PersonalInfoScreen';
 // redux
 import { useSelector } from 'react-redux';
 import { AppColors } from '../styles';
@@ -83,6 +85,7 @@ export const AuthStackScreen = () => (
     <AuthStack.Screen name="AuthScreen" component={AuthScreen} />
     <AuthStack.Screen name="LoginScreen" component={LoginStackScreen} />
     <AuthStack.Screen name="SignupScreen" component={SignupScreen} />
+    <AuthStack.Screen name="OTPScreen" component={OTPScreen} />
     <AuthStack.Screen name="FinishResetScreen" component={FinishResetPwScreen} />
   </AuthStack.Navigator>
 );
@@ -146,14 +149,13 @@ export const ProfileStackScreen = () => (
   <ProfileStack.Navigator
     screenOptions={{
       headerShown: false,
-      gestureEnabled: true,
-      cardOverlayEnabled: true,
-      ...TransitionPresets.ModalPresentationIOS,
+      cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
     }}
-    mode="modal"
+    // mode="modal"
   >
     <ProfileStack.Screen name="Profile" component={ProfileScreen} />
     <ProfileStack.Screen name="ProfileEdit" component={EditProfileScreen} />
+    <ProfileStack.Screen name="PersonalInfo" component={PersonalInfoScreen} />
   </ProfileStack.Navigator>
 );
 
@@ -183,6 +185,10 @@ const Tab = createMaterialBottomTabNavigator();
 
 export const TabScreen = () => {
   const carts = useSelector((state) => state.cart.cartItems);
+  console.log("Carts:", carts);
+  console.log("Carts.items:", carts?.products);
+  console.log("Carts.items.length:", carts?.products?.length);
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -229,7 +235,7 @@ export const TabScreen = () => {
         component={CartStackScreen}
         options={() => ({
           tabBarLabel: 'Giỏ hàng',
-          tabBarBadge: carts.items.length === 0 ? null : carts.items.length,
+          tabBarBadge: carts.products?.length === 0 ? null : carts.products?.length,
         })}
       />
       <Tab.Screen

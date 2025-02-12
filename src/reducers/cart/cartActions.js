@@ -15,13 +15,13 @@ export const fetchCart = () => {
     const emptyCart = {
       items: [],
     };
-    if (user.userid != undefined) {
+    if (user.id != undefined) {
       dispatch({
         type: CART_LOADING,
       });
       try {
         const response = await timeoutPromise(
-          fetch(`${API_URL}/cart`, {
+          fetch(`${API_URL}/carts`, {
             headers: {
               Accept: "application/json",
               "Content-Type": "application/json",
@@ -37,8 +37,8 @@ export const fetchCart = () => {
           throw new Error("Something went wrong!, can't get your carts");
         }
         const resData = await response.json();
-        const filterUserCart = resData.content.filter(
-          (userCart) => userCart.userId === user.userid
+        const filterUserCart = resData.filter(
+          (userCart) => userCart.userId === user.id
         );
         let carts = emptyCart;
         if (filterUserCart.length > 0) {
@@ -64,7 +64,7 @@ export const addToCart = (item) => {
     const user = getState().auth.user;
     try {
       const response = await timeoutPromise(
-        fetch(`${API_URL}/cart/post`, {
+        fetch(`${API_URL}/carts`, {
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
@@ -72,10 +72,10 @@ export const addToCart = (item) => {
           },
           method: "POST",
           body: JSON.stringify({
-            userId: user.userid,
-            items: [
+            userId: user.id,
+            products: [
               {
-                item: item._id,
+                productId: item.id, 
                 quantity: 1,
               },
             ],
@@ -90,7 +90,10 @@ export const addToCart = (item) => {
       }
       dispatch({
         type: "ADD_CART",
-        cartItem: item,
+        cartItem: {
+          ...item,
+          quantity: 1, 
+        },
       });
     } catch (err) {
       throw err;
@@ -134,6 +137,7 @@ export const removeFromCart = (cartId, itemId) => {
     }
   };
 };
+
 //Decrease cart quantity
 export const decCartQuantity = (cartId, itemId) => {
   return async (dispatch, getState) => {
@@ -143,7 +147,7 @@ export const decCartQuantity = (cartId, itemId) => {
     const user = getState().auth.user;
     try {
       const response = await timeoutPromise(
-        fetch(`${API_URL}/cart/cartitem/${cartId}`, {
+        fetch(`${API_URL}/carts/${cartId}`, {
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",

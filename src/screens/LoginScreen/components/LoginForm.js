@@ -100,7 +100,7 @@ const Login = (props) => {
     try {
       setLoading(true);
       await dispatch(LoginAction(values.email, values.password));
-      props.navigation.navigate('Home');
+      props.navigation.navigate('HomeTab');
     } catch (err) {
       setLoading(false);
       alert(err);
@@ -181,10 +181,11 @@ const Login = (props) => {
             </View>
             <TouchableOpacity
               onPress={handleSubmit(submit)}
+              disabled={!props.valid || loading}
               style={{
                 marginVertical: 10,
                 alignItems: 'center',
-                backgroundColor: AppColors.primary,
+                backgroundColor: props.valid ? AppColors.primary : AppColors.primaryLight,
                 borderRadius: 10,
                 paddingVertical: 5
               }}
@@ -193,7 +194,10 @@ const Login = (props) => {
                 {loading ? (
                   <ActivityIndicator size="small" color="#fff" />
                 ) : (
-                  <CustomText style={styles.textSign}>Đăng nhập</CustomText>
+                  <CustomText style={{
+                    ...styles.textSign,
+                    color: props.valid ? AppColors.white : AppColors.yellowLight, // Đổi màu chữ
+                  }}>Đăng nhập</CustomText>
                 )}
               </View>
             </TouchableOpacity>
@@ -299,9 +303,9 @@ const styles = StyleSheet.create({
     height: 50,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 5,
-    flexDirection: 'row',
-    backgroundColor: AppColors.primary,
+    // borderRadius: 5,
+    // flexDirection: 'row',
+    // backgroundColor: AppColors.primary,
   },
   textSign: {
     fontSize: 20,
@@ -341,6 +345,6 @@ const styles = StyleSheet.create({
   }
 });
 export const LoginForm = reduxForm({
-  form: 'login', // a unique identifier for this form
-  validate, // <--- validation function given to redux-form
+  form: 'login',
+  validate,
 })(Login);

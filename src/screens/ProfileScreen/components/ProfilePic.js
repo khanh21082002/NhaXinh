@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Image,
   Platform,
+  Text
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Colors from "../../../utils/Colors";
@@ -74,14 +75,21 @@ export const ProfilePic = ({
             transform: [{ translateY: -110 }, { translateX: -5 }],
           }}
         >
-          <View style={styles.cameraContainer}>
+          {/* <View style={styles.cameraContainer}>
             <TouchableOpacity onPress={UploadProfileHandler}>
               <FontAwesome name="camera" size={15} color="white" />
             </TouchableOpacity>
-          </View>
+          </View> */}
         </View>
       </View>
       <CustomText style={styles.userName}>{user.name.firstname + " " + user.name.lastname}</CustomText>
+      <View style={styles.priceCard}>
+        <Text style={styles.label}>Tổng chi tiêu</Text>
+        <View style={styles.balanceContainer}>
+          <Text style={styles.balanceAmount}>8.450.000</Text>
+          <Text style={styles.balanceType}> | Hạng Bạc</Text>
+        </View>
+      </View>
     </View>
   );
 };
@@ -118,6 +126,35 @@ const styles = StyleSheet.create({
     marginTop: 10,
     color: AppColors.primary,
     textAlign: "center",
+  },
+  priceCard: {
+    backgroundColor: "white",
+    borderRadius: 15,
+    padding: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    alignItems: "center",
+    marginVertical:20
+  },
+  label: {
+    fontSize: 14,
+    color: "#666",
+  },
+  balanceContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  balanceAmount: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#FFA500",
+  },
+  balanceType: {
+    fontSize: 16,
+    color: "#666",
   },
 });
 
