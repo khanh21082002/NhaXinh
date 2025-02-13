@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   title: {
-    fontSize: 18,
+    fontSize: 20,
     color: AppColors.primary,
     fontWeight: "500",
   },
@@ -114,6 +114,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     justifyContent: "center",
     alignItems: "center",
+    marginBottom: 10,
   },
   seeMoreText: {
     fontSize: 14,

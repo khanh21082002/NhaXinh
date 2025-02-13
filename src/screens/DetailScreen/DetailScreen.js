@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Dimensions, Animated } from 'react-native';
+import { View, StyleSheet, FlatList, Animated } from 'react-native';
 //Color
 import Colors from '../../utils/Colors';
 //Redux
@@ -23,16 +23,16 @@ export const DetailScreen = (props) => {
   const [message, setMessage] = useState('');
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [color, setColor] = useState(AppColors.primary);
-  //color
-  const type = item.color;
   const [modalVisible, setModalVisible] = useState(false);
+
   //Favorite
   const FavoriteProducts = useSelector((state) =>
-    state.fav.favoriteList.some((product) => product._id === item._id),
+    state.fav.favoriteList.some((product) => product._id === item._id)
   );
+
   useEffect(() => {
     const checkColor = async () => {
-      const getColor = await colorCheck(type);
+      const getColor = await colorCheck(item.color);
       setColor(getColor);
     };
     checkColor();
@@ -40,23 +40,21 @@ export const DetailScreen = (props) => {
 
   return (
     <View style={styles.container}>
-      {showSnackbar ? (
-        <Snackbar checkVisible={showSnackbar} message={message} />
-      ) : (
-        <View />
-      )}
-      <Header navigation={props.navigation} scrollY={scrollY} item={item} />
+      {showSnackbar && <Snackbar checkVisible={showSnackbar} message={message} />}
+      
+      <FlatList
+        data={[{}]} // Chỉ để kích hoạt danh sách
+        keyExtractor={(_, index) => index.toString()}
+        ListHeaderComponent={
+          <>
+            <Header navigation={props.navigation} scrollY={scrollY} item={item} />
+            <DetailBody item={item} color={color} />
+          </>
+        }
+        ListFooterComponent={<Comments />}
+        showsVerticalScrollIndicator={false}
+      />
 
-      <Animated.ScrollView
-        scrollEventThrottle={1}
-        onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-          { useNativeDriver: false },
-        )}
-      >
-        <DetailBody item={item} color={color} />
-        <Comments />
-      </Animated.ScrollView>
       <ActionButton
         item={item}
         FavoriteProducts={FavoriteProducts}
@@ -66,6 +64,7 @@ export const DetailScreen = (props) => {
         user={user}
         color={color}
       />
+
       <ModalComp
         item={item}
         color={color}
@@ -80,3 +79,5 @@ export const DetailScreen = (props) => {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff', paddingBottom: 20 },
 });
+
+export default DetailScreen;

@@ -14,6 +14,7 @@ import Skeleton from '../../components/Loaders/SkeletonLoading';
 import Snackbar from '../../components/Notification/Snackbar';
 // FloatButton
 import { Portal, Provider } from 'react-native-paper';
+import SearchItem from './components/SearchItem';
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 // height
@@ -26,7 +27,7 @@ export const HomeScreen = ({ navigation }) => {
 
   const dispatch = useDispatch();
   // Header Animation
-  let scrollY = useSharedValue(0);
+  const scrollY = useSharedValue(0);
   const user = useSelector((state) => state.auth.user);
   const products = useSelector((state) => state.store.products);
   const isLoading = useSelector((state) => state.store.isLoading);
@@ -64,31 +65,31 @@ export const HomeScreen = ({ navigation }) => {
         <Skeleton />
       ) : (
         <View style={styles.container}>
-          {/* <Header
-            scrollPoint={scrollY}
-            navigation={navigation}
-            products={products}
-          /> */}
           <Portal>
             <FloatButton />
           </Portal>
           <AnimatedFlatList
+            keyboardShouldPersistTaps="handled"
             contentContainerStyle={styles.list}
             showsVerticalScrollIndicator={false}
             ListHeaderComponent={() => (
-              <View style={styles.banner}>
-                <Carousel />
-              </View>
+              <>
+                <Header products={products} navigation={navigation} scrollPoint={scrollY} />
+                <View style={[styles.banner, { paddingTop: 60 }]}>
+                  <Carousel />
+                </View>
+              </>
+
             )}
             scrollEventThrottle={1}
             onScroll={onScroll}
-            data={Object.keys(groupedProducts)} 
-            keyExtractor={(item) => item} 
+            data={Object.keys(groupedProducts)}
+            keyExtractor={(item) => item}
             renderItem={({ item }) => (
               <CategorySection
-              name={item} // `item` là category name
-              data={groupedProducts[item]} 
-              navigation={navigation}
+                name={item} // `item` là category name
+                data={groupedProducts[item]}
+                navigation={navigation}
               />
             )}
           />
@@ -100,7 +101,7 @@ export const HomeScreen = ({ navigation }) => {
               message={
                 Object.keys(user).length === 0
                   ? notification
-                  : notification + ' ' + user.name
+                  : notification + ' ' + user.name.firstname + ' ' + user.name.lastname
               }
             />
           )}
@@ -120,7 +121,7 @@ const styles = StyleSheet.create({
   },
   list: {
     width: '100%',
-    marginTop: 50,
+    marginTop: 0,
     paddingBottom: 20,
   },
 });

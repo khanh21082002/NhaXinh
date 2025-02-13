@@ -1,14 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Modal, FlatList, Platform, ScrollView, Dimensions } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import { AppColors } from '../../../styles';
-import { useDispatch } from 'react-redux';
-import { fetchLocals } from '../../../reducers/local';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Modal,
+  Platform,
+  ScrollView,
+  Dimensions,
+} from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import { TextInput } from "react-native-paper";
+import { useDispatch } from "react-redux";
+import { fetchLocals } from "../../../reducers/local";
+import { AppColors } from "../../../styles";
 
-const { height, width } = Dimensions.get('window');
+const { height } = Dimensions.get("window");
 
-export const FormInput = ({ label, value, editable, iconName, isDate, isGender, isCity, onChangeValue }) => {
+export const FormInput = ({
+  label,
+  value,
+  editable,
+  iconName,
+  isDate,
+  isGender,
+  isCity,
+  onChangeValue,
+}) => {
   const dispatch = useDispatch();
 
   const [showPicker, setShowPicker] = useState(false);
@@ -19,58 +38,61 @@ export const FormInput = ({ label, value, editable, iconName, isDate, isGender, 
   const genderOptions = ["Nam", "Nữ"];
 
   useEffect(() => {
-    const fetching = async () => {
-      try {
-        const citiesData = await dispatch(fetchLocals(1));
-        setCities(citiesData); // Dữ liệu bây giờ có thể set đúng
-      } catch (err) {
-        console.error("Lỗi khi lấy danh sách tỉnh/thành:", err);
-      }
-    };
-    fetching();
+    if (isCity) {
+      const fetching = async () => {
+        try {
+          const citiesData = await dispatch(fetchLocals(1));
+          setCities(citiesData);
+        } catch (err) {
+          console.error("Lỗi khi lấy danh sách tỉnh/thành:", err);
+        }
+      };
+      fetching();
+    }
   }, [isCity]);
 
   const handleDateChange = (event, selectedDate) => {
     if (selectedDate) {
       setShowPicker(false);
       setDate(selectedDate);
-      const day = selectedDate.getDate().toString().padStart(2, "0"); // Đảm bảo 2 chữ số
-      const month = (selectedDate.getMonth() + 1).toString().padStart(2, "0"); // Tháng bắt đầu từ 0
-      const year = selectedDate.getFullYear();
-      const formattedDate = `${day}/${month}/${year}`;
-
+      const formattedDate = selectedDate.toLocaleDateString("vi-VN"); // Định dạng DD/MM/YYYY
       onChangeValue(formattedDate);
     }
   };
 
-
-  const filteredCities = cities.filter(item =>
+  const filteredCities = cities.filter((item) =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
     <View style={styles.inputContainer}>
-      <Text style={styles.label}>{label}</Text>
-      <View style={styles.inputWrapper}>
-        <TextInput
-          style={styles.input}
-          value={value}
-          editable={!isDate && !isGender && !isCity && editable} // Chỉ khóa nếu là Date/Gender/City
-          onChangeText={onChangeValue}
-        />
-        {iconName && (
-          <TouchableOpacity onPress={() => setShowPicker(true)}>
-            <Icon name={iconName} size={20} color="#FFA500" style={styles.icon} />
-          </TouchableOpacity>
-        )}
-      </View>
+      <TextInput
+        label={label}
+        value={value}
+        mode="outlined"
+        editable={!isDate && !isGender && !isCity && editable}
+        right={
+          iconName ? (
+            <TextInput.Icon
+              icon={() => <Icon name={iconName} size={20} color="#FFA500" />}
+              onPress={() => setShowPicker(true)}
+            />
+          ) : null
+        }
+        onChangeText={onChangeValue}
+        theme={{
+          roundness: 15
+          , colors: { primary: AppColors.yellowLight }
+        }}
+        style={styles.input}
+      />
 
       {/* Date Picker */}
       {isDate && showPicker && (
         <DateTimePicker
           value={date}
           mode="date"
-          display={Platform.OS === 'ios' ? 'spinner' : 'calendar'}
+          display={Platform.OS === "ios" ? "spinner" : "calendar"}
           onChange={handleDateChange}
         />
       )}
@@ -78,13 +100,20 @@ export const FormInput = ({ label, value, editable, iconName, isDate, isGender, 
       {/* Modal chọn giới tính */}
       {isGender && (
         <Modal visible={showPicker} transparent animationType="slide">
-          <TouchableOpacity style={styles.overlay} onPress={() => setShowPicker(false)} />
+          <TouchableOpacity
+            style={styles.overlay}
+            onPress={() => setShowPicker(false)}
+          />
           <View style={styles.modalContainer}>
             {genderOptions.map((item, index) => (
-              <TouchableOpacity key={index} style={styles.option} onPress={() => {
-                onChangeValue(item);
-                setShowPicker(false);
-              }}>
+              <TouchableOpacity
+                key={index}
+                style={styles.option}
+                onPress={() => {
+                  onChangeValue(item);
+                  setShowPicker(false);
+                }}
+              >
                 <Text style={styles.optionText}>{item}</Text>
               </TouchableOpacity>
             ))}
@@ -95,18 +124,20 @@ export const FormInput = ({ label, value, editable, iconName, isDate, isGender, 
       {/* Modal chọn tỉnh/thành phố */}
       {isCity && (
         <Modal visible={showPicker} transparent animationType="slide">
-          <TouchableOpacity style={styles.overlay} onPress={() => setShowPicker(false)} />
+          <TouchableOpacity
+            style={styles.overlay}
+            onPress={() => setShowPicker(false)}
+          />
           <View style={styles.modalContainer}>
-
-            {/* Thanh tìm kiếm */}
             <TextInput
-              style={styles.searchInput}
-              placeholder="Tìm kiếm tỉnh/thành..."
+              label="Tìm kiếm tỉnh/thành..."
               value={searchTerm}
-              onChangeText={text => setSearchTerm(text)}
+              onChangeText={setSearchTerm}
+              mode="outlined"
+              theme={{ colors: { primary: "#FFA500" } }}
+              style={styles.searchInput}
             />
 
-            {/* Danh sách cuộn với ScrollView */}
             <ScrollView style={styles.scrollView}>
               {filteredCities.map((item) => (
                 <TouchableOpacity
@@ -121,11 +152,9 @@ export const FormInput = ({ label, value, editable, iconName, isDate, isGender, 
                 </TouchableOpacity>
               ))}
             </ScrollView>
-
           </View>
         </Modal>
       )}
-
     </View>
   );
 };
@@ -134,27 +163,10 @@ const styles = StyleSheet.create({
   inputContainer: {
     marginBottom: 8,
   },
-  label: {
-    fontSize: 12,
-    color: '#666',
-    marginBottom: 2,
-  },
-  inputWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#F5F5F5',
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-    borderRadius: 25,
-    paddingHorizontal: 10,
-  },
   input: {
-    flex: 1,
     fontSize: 16,
-    paddingVertical: 10,
-  },
-  icon: {
-    marginLeft: 8,
+    backgroundColor: "white",
+    marginBottom: 5,
   },
   overlay: {
     flex: 1,
@@ -178,25 +190,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   searchInput: {
-    height: 50,
-    borderBottomWidth: 1,
-    borderColor: "#ddd",
-    paddingHorizontal: 10,
+    fontSize: 16,
     marginBottom: 10,
-    fontSize: 16,
   },
-
   scrollView: {
-    maxHeight: height * 0.5, // Giới hạn chiều cao để tránh tràn màn hình
-  },
-
-  option: {
-    padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
-  },
-
-  optionText: {
-    fontSize: 16,
+    maxHeight: height * 0.5,
   },
 });
+

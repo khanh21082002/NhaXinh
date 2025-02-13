@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Linking } from 'react-native';
 import { FAB } from 'react-native-paper';
 import Colors from '../../../utils/Colors';
+import App from '../../../../App';
+import { AppColors } from '../../../styles';
 
 export const FloatButton = () => {
   const [state, setState] = useState({ open: false });
@@ -13,7 +15,7 @@ export const FloatButton = () => {
       icon={open ? 'send' : 'square-edit-outline'}
       color='#fff'
       fabStyle={{
-        backgroundColor: Colors.blue,
+        backgroundColor: AppColors.primary,
         bottom: 10,
       }}
       actions={[

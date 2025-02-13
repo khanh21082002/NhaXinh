@@ -1,27 +1,25 @@
 import React from "react";
 import { View, Image, TouchableOpacity, StyleSheet } from "react-native";
-import Colors from "../../../utils/Colors";
-import Ionicons from 'react-native-vector-icons/Ionicons';
-//Text
-import CustomText from "../../../components/UI/CustomText";
-//PropTypes check
+import Ionicons from "react-native-vector-icons/Ionicons";
 import PropTypes from "prop-types";
+import Colors from "../../../utils/Colors";
+import CustomText from "../../../components/UI/CustomText";
 
-export default SearchItem = ({ item, navigation }) => {
+const SearchItem = ({ item, navigation }) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity
         onPress={() => navigation.navigate("Detail", { item })}
-        style={{ flexDirection: "row", alignItems: "center" }}
+        style={styles.row}
       >
         <Ionicons
-          name='ios-search'
+          name="search-outline"
           size={22}
           color={Colors.grey}
-          style={{ marginRight: 20 }}
+          style={styles.icon}
         />
-        <Image style={styles.image} source={{ uri: item.thumb }} />
-        <CustomText style={styles.name}>{item.filename}</CustomText>
+        <Image style={styles.image} source={{ uri: item.image }} />
+        <CustomText style={styles.name}>{item.title}</CustomText>
       </TouchableOpacity>
     </View>
   );
@@ -40,6 +38,13 @@ const styles = StyleSheet.create({
     borderBottomColor: Colors.light_grey,
     justifyContent: "center",
   },
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  icon: {
+    marginRight: 20,
+  },
   image: {
     height: 50,
     width: 70,
@@ -47,4 +52,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginRight: 30,
   },
+  name: {
+    flex: 1, // Để text không bị tràn
+  },
 });
+
+export default SearchItem;

@@ -81,7 +81,7 @@ export const EditProfileScreen = (props) => {
             onChangeText={(text) => setAddress(text)}
             style={{ marginVertical: 10 }}
             autoCapitalize='words'
-            returnKeyType='done'
+            
           />
         </View>
         <View style={styles.button}>

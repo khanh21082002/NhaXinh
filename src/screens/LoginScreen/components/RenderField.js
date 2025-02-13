@@ -33,7 +33,7 @@ export default renderField = ({
           }}
         />
         <TextInput
-          placeholder={label}
+          label={label}
           autoCapitalize='none'
           mode='outlined'
           clearButtonMode={passIcon ? "never" : "always"}
@@ -59,6 +59,7 @@ export default renderField = ({
           keyboardType={keyboardType}
           onChangeText={onChange}
           secureTextEntry={secureTextEntry}
+          returnKeyType='done'
           {...restInput}
         />
         {passIcon ? (

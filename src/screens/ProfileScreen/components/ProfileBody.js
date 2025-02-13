@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
   },
   menuContainer: {
     paddingVertical: 10,
-    width: "90%", // Đảm bảo nó không bị bó hẹp
+    width: "100%", // Đảm bảo nó không bị bó hẹp
     alignSelf: "center", // Căn giữa danh sách
   },
 });

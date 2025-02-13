@@ -35,7 +35,7 @@ export default renderField = ({
         }}
       />
       <TextInput
-        placeholder={label}
+        label={label}
         autoCapitalize={autoCapitalize ? "words" : "none"}
         clearButtonMode={passIcon ? "never" : "always"}
         mode="outlined"

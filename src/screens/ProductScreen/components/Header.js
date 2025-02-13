@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import {
   View,
   StyleSheet,
@@ -7,12 +7,9 @@ import {
   Dimensions,
   Platform,
   Image,
+  Animated,
 } from "react-native";
-import Animated, {
-  useAnimatedStyle,
-  interpolate,
-  Extrapolate,
-} from "react-native-reanimated";
+
 import ShareItem from "../../../components/UI/ShareItem";
 import Colors from "../../../utils/Colors";
 import CustomText from "../../../components/UI/CustomText";
@@ -25,26 +22,29 @@ const HEADER_MIN = 90;
 const HEADER_DISTANCE = HEADER_HEIGHT - HEADER_MIN;
 
 export const Header = ({ navigation, searchFilterFunction, scrollY }) => {
-  const animatedHeaderStyle = useAnimatedStyle(() => ({
-    transform: [
-      {
-        translateY: interpolate(scrollY.value, [0, HEADER_DISTANCE], [0, -HEADER_MIN / 2], Extrapolate.CLAMP),
-      },
-    ],
-  }));
+  const translateY = scrollY.interpolate({
+    inputRange: [0, HEADER_DISTANCE],
+    outputRange: [0, -HEADER_MIN / 2],
+    extrapolate: "clamp",
+  });
 
-  const animatedTitleStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(scrollY.value, [0, HEADER_DISTANCE], [1, 0], Extrapolate.CLAMP),
-  }));
+  const opacity = scrollY.interpolate({
+    inputRange: [0, HEADER_DISTANCE],
+    outputRange: [1, 0],
+    extrapolate: "clamp",
+  });
 
-  const animatedInputStyle = useAnimatedStyle(() => ({
-    transform: [
-      {
-        translateY: interpolate(scrollY.value, [0, HEADER_DISTANCE], [0, -HEADER_MIN + 10], Extrapolate.CLAMP),
-      },
-    ],
-    width: interpolate(scrollY.value, [0, HEADER_DISTANCE], [width - 20, width - 80], Extrapolate.CLAMP),
-  }));
+  const searchTranslateY = scrollY.interpolate({
+    inputRange: [0, HEADER_DISTANCE],
+    outputRange: [0, -HEADER_MIN + 10],
+    extrapolate: "clamp",
+  });
+
+  const searchScaleX = scrollY.interpolate({
+    inputRange: [0, HEADER_DISTANCE],
+    outputRange: [1, 1.1], 
+    extrapolate: "clamp",
+  });
 
   return (
     <>
@@ -67,8 +67,18 @@ export const Header = ({ navigation, searchFilterFunction, scrollY }) => {
             color="black"
           />
         </View>
-        <Animated.View style={[styles.searchContainer, animatedInputStyle]}>
-          <View style={styles.searchBox}>
+        <Animated.View
+          style={[
+            styles.searchContainer,
+            { transform: [{ translateY: searchTranslateY }] },
+          ]}
+        >
+          <Animated.View
+            style={[
+              styles.searchBox,
+              { transform: [{ scaleX: searchScaleX }] }, // Sửa lỗi width
+            ]}
+          >
             <TextInput
               placeholder="Tìm kiếm sản phẩm"
               placeholderTextColor={Colors.white}
@@ -76,11 +86,11 @@ export const Header = ({ navigation, searchFilterFunction, scrollY }) => {
               onChangeText={searchFilterFunction}
               style={styles.textInput}
             />
-          </View>
+          </Animated.View>
         </Animated.View>
       </View>
-      <Animated.View style={[styles.header, animatedHeaderStyle]}>
-        <Animated.View style={[styles.titleContainer, animatedTitleStyle]}>
+      <Animated.View style={[styles.header, { transform: [{ translateY }] }]}>
+        <Animated.View style={[styles.titleContainer, { opacity }]}>
           <CustomText style={styles.title}>Tất cả sản phẩm</CustomText>
         </Animated.View>
       </Animated.View>
@@ -110,6 +120,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     height: HEADER_HEIGHT,
     backgroundColor: AppColors.primary,
+    zIndex: 1,
   },
   titleContainer: {
     height: 50,
@@ -141,14 +152,14 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   searchBox: {
-    backgroundColor: "rgba(0, 0, 0, 0.3)", // Mô phỏng hiệu ứng mờ
+    backgroundColor: "rgba(0, 0, 0, 0.3)",
     width: "100%",
     borderRadius: 5,
     paddingHorizontal: 10,
     justifyContent: "center",
   },
   textInput: {
-    height: 40,
+    height: 50,
     color: Colors.white,
   },
 });

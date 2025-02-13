@@ -39,7 +39,7 @@ export const ProfileScreen = (props) => {
         {loading && <Loader />}
         <View style={styles.profileContainer}>
           <View style={styles.profileBox}>
-            <EditButton navigation={props.navigation} user={user} />
+            {/* <EditButton navigation={props.navigation} user={user} /> */}
             <ProfilePic
               user={user}
               imageUri={imageUri}

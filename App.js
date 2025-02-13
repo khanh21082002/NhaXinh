@@ -4,7 +4,8 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import ReduxThunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import { Text, StatusBar, View , Image } from 'react-native';
+import { Text, StatusBar, View, Image } from 'react-native';
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { AppNavigator } from './src/navigation';
 import { reducer as formReducer } from 'redux-form';
 import './src/utils/actionSheets';
@@ -60,10 +61,12 @@ export default function App() {
   //   );
   // }
 
-  return (   
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <Provider store={store}>
         <StatusBar barStyle="dark-content" />
         <AppNavigator />
       </Provider>
+    </GestureHandlerRootView>
   );
 }
