@@ -17,12 +17,13 @@ import CustomText from "../../../components/UI/CustomText";
 import NumberFormat from "../../../components/UI/NumberFormat";
 //PropTypes check
 import PropTypes from "prop-types";
+import { AppColors } from "../../../styles";
 
 const HorizontalItem = ({ item, navigation }) => {
   const [isLoading, setIsLoading] = useState(true);
   return (
     <View style={{ backgroundColor: Colors.white }}>
-      <BlurView tint="dark" intensity={10} style={styles.itemContainer}>
+      <View tint="dark" intensity={10} style={styles.itemContainer}>
         <TouchableOpacity
           onPress={() => navigation.navigate("Detail", { item: item })}
           style={{ marginLeft: 5, width: "40%", marginRight: 10 }}
@@ -34,7 +35,7 @@ const HorizontalItem = ({ item, navigation }) => {
               resizeMode: "stretch",
               borderRadius: 15,
             }}
-            source={{ uri: item.thumb }}
+            source={{ uri: item.image }}
             onLoadStart={() => {
               setIsLoading(true);
             }}
@@ -49,17 +50,17 @@ const HorizontalItem = ({ item, navigation }) => {
           )}
         </TouchableOpacity>
         <View style={styles.info}>
-          <CustomText style={styles.title}>{item.filename}</CustomText>
+          <CustomText style={styles.title}>{item.title}</CustomText>
           <CustomText style={styles.subText}>Xuất xứ {item.origin}</CustomText>
           <View style={styles.rateContainer}>
             <View style={styles.rate}>
               <AntDesign name="star" color="#fed922" size={15} />
-              <CustomText style={styles.score}>4.5</CustomText>
+              <CustomText style={styles.score}>{item.rating.rate}</CustomText>
             </View>
             <NumberFormat price={item.price} />
           </View>
         </View>
-      </BlurView>
+      </View>
     </View>
   );
 };
@@ -73,7 +74,7 @@ const styles = StyleSheet.create({
   itemContainer: {
     height: 100,
     flexDirection: "row",
-    // backgroundColor: "rgba(255, 255, 255, 0.8)",
+     backgroundColor: AppColors.primaryLight,
     marginHorizontal: 10,
     marginBottom: 5,
     borderRadius: 5,

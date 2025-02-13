@@ -16,7 +16,7 @@ const MyComponent = ({ checkVisible, message }) => {
         style={styles.snackbar}
         theme={{ colors: { accent: '#fff' } }}
         action={{
-          label: 'Dismiss',
+          label: 'Ẩn',
           onPress: () => {
             onDismissSnackBar;
           },
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   container: {
     position: 'absolute',
     width: '100%',
-    top: 80,
+    top: 60,
     zIndex: 1000,
   },
   snackbar: {

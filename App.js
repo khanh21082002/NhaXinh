@@ -4,9 +4,11 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import ReduxThunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import { Text, StatusBar, View } from 'react-native'; // Thay thế expo-status-bar
-import { AppNavigator } from './src/navigation'; 
+import { Text, StatusBar, View, Image } from 'react-native';
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { AppNavigator } from './src/navigation';
 import { reducer as formReducer } from 'redux-form';
+import './src/utils/actionSheets';
 
 // Reducers
 import {
@@ -36,21 +38,9 @@ const LoadAssets = async () => {
     require('./src/assets/images/banner4.jpg'),
     require('./src/assets/images/banner5.jpg'),
     require('./src/assets/images/banner6.jpg'),
-    // Thêm các ảnh khác vào danh sách
-  ];
+  ].map((img) => Image.prefetch(Image.resolveAssetSource(img).uri)); // Chuyển mỗi ảnh thành một Promise
 
-  // Tải font tùy chỉnh từ React Native (có thể dùng react-native-fonts hoặc các thư viện khác)
-  const fontAssets = Font.loadAsync({
-    'Roboto-Bold': require('./src/assets/fonts/Roboto-Bold.ttf'),
-    'Roboto-BoldItalic': require('./src/assets/fonts/Roboto-BoldItalic.ttf'),
-    'Roboto-Italic': require('./src/assets/fonts/Roboto-Italic.ttf'),
-    'Roboto-LightItalic': require('./src/assets/fonts/Roboto-LightItalic.ttf'),
-    'Roboto-Medium': require('./src/assets/fonts/Roboto-Medium.ttf'),
-    'Roboto-MediumItalic': require('./src/assets/fonts/Roboto-MediumItalic.ttf'),
-    'Roboto-Regular': require('./src/assets/fonts/Roboto-Regular.ttf'),
-  });
-
-  return Promise.all([imageAssets, fontAssets]);
+  return Promise.all([imageAssets]);
 };
 
 export default function App() {
@@ -69,12 +59,14 @@ export default function App() {
   //       <Text>Loading...</Text>
   //     </View>
   //   );
-  // }a
+  // }
 
   return (
-    <Provider store={store}>
-      <StatusBar barStyle="dark-content" /> 
-      <AppNavigator />
-    </Provider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <Provider store={store}>
+        <StatusBar barStyle="dark-content" />
+        <AppNavigator />
+      </Provider>
+    </GestureHandlerRootView>
   );
 }

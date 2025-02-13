@@ -5,7 +5,7 @@ import {AppColors} from "../../../styles";
 import CustomText from "../../../components/UI/CustomText";
 
 export const SubSlide = ({ last, NextSlide, EnterApp }) => {
-  const bgColor = last ? "#2CB9B0" : "rgba(12,13,52,0.05)";
+  const bgColor = last ? AppColors.primary : AppColors.primaryLight;
   const labelCover = last ? "#ffffff" : Colors.text;
   const onPressHandler = last ? EnterApp : NextSlide;
   return (

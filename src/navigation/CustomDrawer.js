@@ -19,12 +19,13 @@ import { Drawer } from "react-native-paper";
 //Color
 import Colors from "../utils/Colors";
 //Icon
-import { MaterialCommunityIcons } from "react-native-vector-icons"; //thay đổi để tránh dùng expo
+import  MaterialCommunityIcons  from "react-native-vector-icons/MaterialCommunityIcons"; //thay đổi để tránh dùng expo
 // Action
 import { Logout as LogoutAction } from "../reducers";
 //Link
 import { OpenURL } from "../utils/Tools";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { AppColors } from "../styles";
 
 const fbURL = "https://www.facebook.com/daquyankhangthinhvuong/";
 const youtubeURL = "https://www.youtube.com/";
@@ -60,7 +61,7 @@ export default (props) => {
           <View style={{ alignItems: "center", marginVertical: 20 }}>
             <Image
               style={styles.logo}
-              source={require("../assets/images/logo1.png")}
+              source={require("../assets/images/logo.png")}
             />
           </View>
         ) : (
@@ -81,13 +82,13 @@ export default (props) => {
               <View style={{ justifyContent: "center" }}>
                 <Text
                   style={{
-                    color: Colors.green,
+                    color:AppColors.primary,
                     fontSize: 18,
                     paddingHorizontal: 10,
                     paddingVertical: 0,
                   }}
                 >
-                  {user.name}
+                  {user.username}
                 </Text>
                 <Text
                   style={{
@@ -161,7 +162,7 @@ export default (props) => {
             <Text
               style={{ color: Colors.grey, fontFamily: "Roboto-LightItalic" }}
             >
-              CatTuong App Version 1.0
+              NhaXinh App Version 1.0
             </Text>
           )}
         />
@@ -189,11 +190,11 @@ const styles = StyleSheet.create({
   },
   logo: {
     resizeMode: "contain",
-    width: "80%",
+    width: "100%",
     height: 100,
   },
   logoutSection: {
-    backgroundColor: Colors.lighter_green,
+    backgroundColor: AppColors.primary,
     borderRadius: 5,
     marginHorizontal: 10,
     height: 50,

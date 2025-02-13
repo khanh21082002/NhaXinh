@@ -15,13 +15,20 @@ const { height } = Dimensions.get('window');
 export const CartScreen = (props) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const user = useSelector((state) => state.auth.user);
+  const productList = useSelector((state) => state.store.products);
   const carts = useSelector((state) => state.cart.cartItems);
   const loading = useSelector((state) => state.cart.isLoading);
-  const cartItems = carts.items;
-  const cartId = carts._id;
+  const cartItems = carts.products;
+  const cartId = carts.id;
   const dispatch = useDispatch();
   let total = 0;
-  carts.items.map((item) => (total += +item.item.price * +item.quantity));
+  carts.products?.forEach((item) => {
+    const product = productList.find((p) => p.id === item.productId);
+    if (product) {
+      total += product.price * item.quantity;
+    }
+  });
+  
   const loadCarts = useCallback(async () => {
     setIsRefreshing(true);
     try {
@@ -33,8 +40,10 @@ export const CartScreen = (props) => {
   }, [dispatch, setIsRefreshing]);
   useEffect(() => {
     loadCarts();
-  }, [user.userid]);
+  }, [user.id]);
 
+
+  console.log(carts);
   return (
     <View style={styles.container}>
       <Header user={user} carts={carts} navigation={props.navigation} />
@@ -42,19 +51,20 @@ export const CartScreen = (props) => {
       <CartBody
         user={user}
         carts={carts}
+        products={productList}
         loadCarts={loadCarts}
         isRefreshing={isRefreshing}
         navigation={props.navigation}
       />
       {Object.keys(user).length === 0 ? (
         <></>
-      ) : carts.items.length === 0 ? (
+      ) : carts.items?.length === 0 ? (
         <View />
       ) : (
         <TotalButton
           total={total}
           cartItems={cartItems}
-          cartId={cartId}
+          cartId={String(cartId)}
           navigation={props.navigation}
         />
       )}

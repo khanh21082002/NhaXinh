@@ -14,15 +14,20 @@ import Skeleton from '../../components/Loaders/SkeletonLoading';
 import Snackbar from '../../components/Notification/Snackbar';
 // FloatButton
 import { Portal, Provider } from 'react-native-paper';
+import SearchItem from './components/SearchItem';
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 // height
 const { height } = Dimensions.get('window');
 
+
+
 export const HomeScreen = ({ navigation }) => {
+
+
   const dispatch = useDispatch();
   // Header Animation
-  let scrollY = useSharedValue(0);
+  const scrollY = useSharedValue(0);
   const user = useSelector((state) => state.auth.user);
   const products = useSelector((state) => state.store.products);
   const isLoading = useSelector((state) => state.store.isLoading);
@@ -37,9 +42,7 @@ export const HomeScreen = ({ navigation }) => {
       }
     };
     fetching();
-  }, [user.userid]);
-
-  console.log(products);
+  }, [user.id]);
 
   // Animated Scroll Handler
   const onScroll = useAnimatedScrollHandler({
@@ -48,37 +51,44 @@ export const HomeScreen = ({ navigation }) => {
     },
   });
 
+  const groupedProducts = products.reduce((acc, item) => {
+    if (!acc[item.category]) {
+      acc[item.category] = [];
+    }
+    acc[item.category].push(item);
+    return acc;
+  }, {});
+
   return (
     <Provider>
       {isLoading ? (
         <Skeleton />
       ) : (
         <View style={styles.container}>
-          <Header
-            scrollPoint={scrollY}
-            navigation={navigation}
-            products={products}
-          />
           <Portal>
             <FloatButton />
           </Portal>
           <AnimatedFlatList
+            keyboardShouldPersistTaps="handled"
             contentContainerStyle={styles.list}
             showsVerticalScrollIndicator={false}
             ListHeaderComponent={() => (
-              <View style={styles.banner}>
-                <Carousel />
-              </View>
+              <>
+                <Header products={products} navigation={navigation} scrollPoint={scrollY} />
+                <View style={[styles.banner, { paddingTop: 60 }]}>
+                  <Carousel />
+                </View>
+              </>
+
             )}
             scrollEventThrottle={1}
             onScroll={onScroll}
-            data={Categories}
-            keyExtractor={(item) => item.name}
+            data={Object.keys(groupedProducts)}
+            keyExtractor={(item) => item}
             renderItem={({ item }) => (
               <CategorySection
-                name={item.name}
-                bg={item.bg}
-                data={products}
+                name={item} // `item` là category name
+                data={groupedProducts[item]}
                 navigation={navigation}
               />
             )}
@@ -91,7 +101,7 @@ export const HomeScreen = ({ navigation }) => {
               message={
                 Object.keys(user).length === 0
                   ? notification
-                  : notification + ' ' + user.name
+                  : notification + ' ' + user.name.firstname + ' ' + user.name.lastname
               }
             />
           )}
@@ -106,9 +116,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.white,
   },
+  banner: {
+    marginBottom: 10,
+  },
   list: {
     width: '100%',
-    marginTop: 50,
+    marginTop: 0,
     paddingBottom: 20,
   },
 });

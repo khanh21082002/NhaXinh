@@ -64,7 +64,7 @@ export const Pagination = ({ scrollX, slides }) => {
                   style={[ 
                     styles.paginationDot,
                     {
-                      backgroundColor: AppColors.primary,
+                      backgroundColor: AppColors.primaryLight,
                       transform: [{ scale }],
                       width: dotWidth, 
                       marginHorizontal: marginHorizontal, 

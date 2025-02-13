@@ -1,6 +1,7 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { AuthBody } from "./components";
+import Colors from "../../utils/Colors";
 
 export const AuthScreen = ({ navigation }) => {
   return (
@@ -15,5 +16,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: Colors.white,
   },
 });

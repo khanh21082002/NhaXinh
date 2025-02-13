@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
+import { View, StyleSheet, Dimensions, TouchableOpacity , Image } from "react-native";
 //Color
 import Colors from "../../../utils/Colors";
 //Icon
@@ -8,6 +8,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 //Text
 import CustomText from "../../../components/UI/CustomText";
+import { AppColors } from "../../../styles";
 
 const { height } = Dimensions.get("window");
 
@@ -16,11 +17,12 @@ export const Header = ({ navigation }) => {
     <View style={styles.header}>
       <View style={{ position: "absolute", bottom: 10, left: 15, zIndex: 10 }}>
         <TouchableOpacity onPress={() => navigation.navigate("HomeTab")}>
-          <Ionicons
-            name='ios-arrow-back'
-            size={28}
-            color={Colors.lighter_green}
-          />
+        <Image
+          source={require('../../../assets/images/icons/arrow_back.png')}
+          style={{ width: 35, height: 35 }}
+          borderRadius={8}
+          backgroundColor={AppColors.primaryLight}
+        />
         </TouchableOpacity>
       </View>
       <CustomText style={styles.title}> Sản Phẩm Yêu Thích </CustomText>
@@ -51,7 +53,7 @@ const styles = StyleSheet.create({
   },
   title: {
     textAlign: "center",
-    color: Colors.lighter_green,
+    color: AppColors.primary,
     fontSize: 20,
     fontFamily: "Roboto-Medium",
     paddingBottom: 5,

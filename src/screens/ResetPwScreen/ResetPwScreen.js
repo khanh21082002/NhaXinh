@@ -21,6 +21,7 @@ import { ResetPassword } from "../../reducers";
 import Loader from "../../components/Loaders/Loader";
 // Thay thế expo-secure-store bằng AsyncStorage
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AppColors } from "../../styles";
 
 //Validation
 const validate = (values) => {
@@ -80,7 +81,7 @@ const resetForm = (props) => {
         <Icon
           name="arrow-left-circle"
           size={30}
-          color={Colors.lighter_green}
+          color={AppColors.primary}
         />
       </TouchableOpacity>
       <View style={styles.content}>
@@ -133,7 +134,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   title: {
-    color: Colors.lighter_green,
+    color: AppColors.primary,
     fontSize: 30,
     marginBottom: 10,
   },
@@ -145,7 +146,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     flexDirection: "row",
     marginBottom: 10,
-    backgroundColor: Colors.lighter_green,
+    backgroundColor: AppColors.primary,
   },
   textSign: {
     fontSize: 15,

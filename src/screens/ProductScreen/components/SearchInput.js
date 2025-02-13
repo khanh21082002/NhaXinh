@@ -5,6 +5,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Colors from "../../../utils/Colors";
 //Animate
 import Animated, { Easing } from "react-native-reanimated";
+import { AppColors } from "../../../styles";
 //height
 const { height } = Dimensions.get("window");
 
@@ -79,7 +80,7 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontSize: Platform.OS === "android" ? 30 : height < 668 ? 30 : 32,
-    color: Colors.lighter_green,
+    color: AppColors.primary,
   },
   inputBox: {
     flexDirection: "row",

@@ -1,63 +1,51 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import CustomText from "../../../components/UI/CustomText";
-import UploadButton from "./UploadButton";
-import Detail from "./Detail";
-//PropTypes check
 import PropTypes from "prop-types";
+import { useNavigation } from "@react-navigation/native";
+import MenuItem from "./MenuItem";
 
-export const ProfileBody = ({
-  user,
-  uploadButton,
-  setUploadButton,
-  setImageUri,
-  UploadProfile,
-}) => {
+export const ProfileBody = ({ user }) => {
+  const menuItems = [
+    { icon: "person-outline", title: "Thông tin cá nhân", screen: "PersonalInfo" },
+    { icon: "time-outline", title: "Lịch sử mua hàng" },
+    { icon: "card-outline", title: "Liên kết ngân hàng" },
+    { icon: "help-circle-outline", title: "Hỗ trợ" },
+    { icon: "settings-outline", title: "Cài đặt" },
+  ];
+
+  const navigation = useNavigation();
+
   return (
-    <View style={styles.footer}>
-      <View style={styles.titleContainer}>
-        <CustomText style={styles.title}>Thông tin cá nhân</CustomText>
+    <View style={styles.container}>
+      <View style={styles.menuContainer}>
+        {menuItems.map((item, index) => (
+          <MenuItem
+            key={index}
+            icon={item.icon}
+            title={item.title}
+            onPress={() => navigation.navigate(item.screen , { user })}
+          />
+        ))}
       </View>
-      <Detail icon='person' content={user.name} />
-      <Detail icon='email-outline' content={user.email} />
-      <Detail
-        icon='phone'
-        content={user.phone.length === 0 ? "Not added yet" : user.phone}
-      />
-      <Detail
-        icon='location-on'
-        content={user.address.length === 0 ? "Not added yet" : user.address}
-      />
-      <UploadButton
-        uploadButton={uploadButton}
-        setUploadButton={setUploadButton}
-        setImageUri={setImageUri}
-        UploadProfile={UploadProfile}
-      />
     </View>
   );
 };
 
 ProfileBody.propTypes = {
   user: PropTypes.object.isRequired,
-  uploadButton: PropTypes.bool.isRequired,
-  setUploadButton: PropTypes.func.isRequired,
-  setImageUri: PropTypes.func.isRequired,
-  UploadProfile: PropTypes.func.isRequired,
 };
 
 const styles = StyleSheet.create({
-  footer: {
-    width: "100%",
-    marginTop: 20,
-    paddingHorizontal: 20,
+  container: {
+    backgroundColor: "#fff",
+    flexGrow: 1, // Thay flex: 1 bằng flexGrow
+    width: "100%", // Đảm bảo chiếm hết chiều rộng
   },
-  titleContainer: {
-    height: 30,
-  },
-
-  title: {
-    fontWeight: "600",
-    textTransform: "uppercase",
+  menuContainer: {
+    paddingVertical: 10,
+    width: "100%", // Đảm bảo nó không bị bó hẹp
+    alignSelf: "center", // Căn giữa danh sách
   },
 });
+
+export default ProfileBody;

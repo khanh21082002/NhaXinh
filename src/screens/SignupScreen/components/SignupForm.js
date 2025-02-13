@@ -11,11 +11,13 @@ import {
   ScrollView,
   Alert,
   Dimensions,
+  Image,
+  Text
 } from "react-native";
 //Colors
 import Colors from "../../../utils/Colors";
 import CustomText from "../../../components/UI/CustomText";
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import { AppColors } from '../../../styles';
 //Redux
 import { useDispatch, useSelector } from "react-redux";
 //Action
@@ -70,14 +72,15 @@ const Signup = (props) => {
 
   const submit = async (values) => {
     try {
-      await dispatch(SignUpAct(values.username, values.email, values.password));
+      // await dispatch(SignUpAct(values.username, values.email, values.password));
       reset();
       if (!unmounted.current) {
         Alert.alert("Signup Successfully", "You can login now", [
           {
             text: "Okay",
             onPress: () => {
-              props.navigation.goBack();
+              // props.navigation.goBack();
+              props.navigation.navigate("OTPScreen", { email: values.email });
             },
           },
         ]);
@@ -89,16 +92,21 @@ const Signup = (props) => {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS == "ios" ? "position" : "height"}
-      // keyboardVerticalOffset={40} // adjust the value here if you need more padding
-      // style={{ flex: 1 }}
+    // keyboardVerticalOffset={40} // adjust the value here if you need more padding
+    // style={{ flex: 1 }}
     >
       <TouchableOpacity
         onPress={() => {
           props.navigation.goBack();
         }}
-        style={{ position: "absolute", top: 50, left: 20, zIndex: 10 }}
+        style={{ position: "absolute", top: 40, left: 20, zIndex: 10 }}
       >
-        <Ionicons name="ios-arrow-back" size={35} color={Colors.light_green} />
+        <Image
+          source={require('../../../assets/images/icons/arrow_back.png')}
+          style={{ width: 35, height: 35 }}
+          borderRadius={8}
+          backgroundColor={AppColors.primaryLight}
+        />
       </TouchableOpacity>
 
       <View style={styles.header}></View>
@@ -111,14 +119,15 @@ const Signup = (props) => {
               zIndex: 0,
             }}
           >
-            <View>
-              <CustomText style={styles.title}>REGISTER</CustomText>
+            <View style={{ marginBottom: 20 }}>
+              <CustomText style={{ ...styles.title, color: Colors.text }}>Xin chào!</CustomText>
+              <Text style={styles.subTitle}>Vui lòng đăng ký để tiếp tục</Text>
             </View>
             <View>
               <Field
                 name="username"
                 keyboardType="default"
-                label="Your Name"
+                label="Tên đăng nhập"
                 component={renderField}
                 icon="id-card"
                 autoCapitalize={true}
@@ -133,7 +142,7 @@ const Signup = (props) => {
               <Field
                 name="password"
                 keyboardType="default"
-                label="Password"
+                label="Mật khẩu"
                 component={renderField}
                 secureTextEntry={showPass ? false : true}
                 passIcon="pass"
@@ -144,7 +153,7 @@ const Signup = (props) => {
               <Field
                 name="confirmpassword"
                 keyboardType="default"
-                label="Confirm Password"
+                label="Xác nhận mật khẩu"
                 component={renderField}
                 secureTextEntry={showConfirmPass ? false : true}
                 passIcon="confirm"
@@ -156,19 +165,57 @@ const Signup = (props) => {
 
             <TouchableOpacity
               onPress={handleSubmit(submit)}
-              style={{ marginVertical: 10, alignItems: "center" }}
+              disabled={!props.valid || loading}
+              style={{
+                marginVertical: 10,
+                alignItems: 'center',
+                backgroundColor: props.valid ? AppColors.primary : AppColors.primaryLight,
+                borderRadius: 10,
+                paddingVertical: 5
+              }}
             >
               <View style={styles.signIn}>
                 {loading ? (
-                  <ActivityIndicator size="small" color="#fff" />
+                  <ActivityIndicator size="small" color={AppColors.white} />
                 ) : (
-                  <CustomText style={styles.textSign}>Đăng ký</CustomText>
+                  <CustomText style={{
+                    ...styles.textSign,
+                    color: props.valid ? AppColors.white : AppColors.yellowLight, // Đổi màu chữ
+                  }}>Đăng ký</CustomText>
                 )}
               </View>
             </TouchableOpacity>
             <View style={{ flex: 1 }} />
           </View>
         </TouchableWithoutFeedback>
+        <View style={styles.center}>
+          <CustomText style={styles.loginOpt}>
+            Hoặc đăng ký bằng
+          </CustomText>
+          <View style={styles.circleImage}>
+            <TouchableOpacity
+            >
+              <Image
+                source={require('../../../assets/images/instagram.png')}
+                style={styles.img}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+            >
+              <Image
+                source={require('../../../assets/images/facebook.png')}
+                style={styles.img}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+            >
+              <Image
+                source={require('../../../assets/images/google.png')}
+                style={styles.img}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -178,9 +225,10 @@ Signup.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   reset: PropTypes.func.isRequired,
 };
+
 const styles = StyleSheet.create({
   header: {
-    marginTop: height * 0.15,
+    marginTop: height * 0.1,
     width: width,
     marginBottom: 40,
     paddingHorizontal: 20,
@@ -192,26 +240,53 @@ const styles = StyleSheet.create({
     height: 50,
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 5,
-    flexDirection: "row",
-    backgroundColor: Colors.lighter_green,
-    marginTop: 10,
+    // borderRadius: 5,
+    // flexDirection: "row",
+    // backgroundColor: AppColors.primaryLight,
   },
   title: {
     color: Colors.light_green,
     fontSize: 40,
-    letterSpacing: 5,
+    letterSpacing: 2,
     fontFamily: "Roboto-Bold",
-    textAlign: "center",
+    textAlign: "Left",
+  },
+  subTitle: {
+    textAlign: 'left',
+    color: AppColors.black,
+    fontSize: 12,
+    fontFamily: 'Roboto-Medium',
   },
   textSign: {
-    fontSize: 15,
-    color: "#fff",
-    fontFamily: "Roboto-Medium",
+    fontSize: 20,
+    color: AppColors.yellowLight,
+    fontFamily: 'Roboto-Medium',
   },
   textSignSmall: {
-    color: Colors.lighter_green,
+    color: AppColors.primary,
     textAlign: "center",
+  },
+
+  center: {
+    alignItems: 'center',
+  },
+  loginOpt: {
+    color: AppColors.primary,
+    fontFamily: 'Roboto-Medium',
+    marginBottom: 10,
+    marginTop: 20
+  },
+  circleImage: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: 50,
+    marginTop: 30
+  },
+  img: {
+    resizeMode: 'contain',
+    height: 50,
+    width: 50,
   },
 });
 export const SignupForm = reduxForm({

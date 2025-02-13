@@ -3,13 +3,13 @@ import { View, StyleSheet } from "react-native";
 //Color
 import Colors from "../../utils/Colors";
 //number format
-import NumberFormat from "react-number-format";
+import { NumericFormat } from "react-number-format";
 //Text
 import CustomText from "./CustomText";
 
-const Number = ({ price, color }, props) => {
+const Number = ({ price, color ,style  }) => {
   return (
-    <NumberFormat
+    <NumericFormat
       value={price}
       displayType={"text"}
       thousandSeparator={true}
@@ -22,9 +22,7 @@ const Number = ({ price, color }, props) => {
               : styles.container
           }
         >
-          <CustomText
-            style={{ ...props.style, color: color ? "#fff" : Colors.red }}
-          >
+         <CustomText style={[style, { color: color ? "#fff" : Colors.red }]}>
             {formattedValue}
           </CustomText>
         </View>

@@ -8,6 +8,8 @@ import { FavoriteItem } from "./FavoriteItem";
 import Messages from "../../../messages/user";
 //PropTypes check
 import PropTypes from "prop-types";
+import App from "../../../../App";
+import { AppColors } from "../../../styles";
 
 export const FavoriteBody = ({
   navigation,
@@ -26,9 +28,9 @@ export const FavoriteBody = ({
               borderWidth: 1,
               paddingHorizontal: 15,
               paddingVertical: 10,
-              backgroundColor: Colors.lighter_green,
+              backgroundColor: AppColors.primary,
               borderRadius: 5,
-              borderColor: Colors.lighter_green,
+              borderColor: AppColors.primary,
               marginTop: 10,
             }}
           >

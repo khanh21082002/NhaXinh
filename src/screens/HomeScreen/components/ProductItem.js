@@ -12,12 +12,14 @@ import  AntDesign  from "react-native-vector-icons/AntDesign";
 //Colors
 import Colors from "../../../utils/Colors";
 //NumberFormat
-import NumberFormat from "../../../components/UI/NumberFormat";
+import Number from "../../../components/UI/NumberFormat";
 //Text
 import CustomText from "../../../components/UI/CustomText";
 import { BlurView } from "@react-native-community/blur";
 //PropTypes check
 import PropTypes from "prop-types";
+import App from "../../../../App";
+import { AppColors } from "../../../styles";
 
 export class ProductItem extends React.PureComponent {
   constructor(props) {
@@ -31,56 +33,58 @@ export class ProductItem extends React.PureComponent {
     };
     return (
       <View style={{ width: "48%" }}>
-        <BlurView tint='light' intensity={70} style={styles.container}>
-          <View
-            style={{
-              width: "100%",
-              justifyContent: "center",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <TouchableOpacity onPress={toDetail}>
-              <Image
-                source={{ uri: item.image }}
-                style={styles.image}
-                onLoadStart={() => {
-                  this.setState({ loading: true });
-                }}
-                onLoadEnd={() => this.setState({ loading: false })}
-              />
-            </TouchableOpacity>
-            {this.state.loading && (
-              <View
-                style={{
-                  position: "absolute",
-                  width: "100%",
-                  height: "100%",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <ActivityIndicator size='small' color={Colors.grey} />
-              </View>
-            )}
-          </View>
-          <View style={styles.center}>
-            <CustomText style={styles.name}>{item.title}</CustomText>
-          </View>
-          <View style={styles.info}>
-            <View style={styles.rate}>
-              <AntDesign name='star' color='#fed922' size={15} />
-              <Text style={styles.score}>5.0</Text>
-            </View>
-            <NumberFormat price={item.price} />
-          </View>
-          <View style={{ marginHorizontal: 5 }}>
-            <TouchableOpacity style={styles.btn} onPress={toDetail}>
-              <CustomText style={styles.detailBtn}>Xem chi tiết</CustomText>
-            </TouchableOpacity>
-          </View>
-        </BlurView>
+  {/* Thay BlurView bằng View thông thường */}
+  <View style={styles.container}>
+    <View
+      style={{
+        width: "100%",
+        justifyContent: "center",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      <TouchableOpacity onPress={toDetail}>
+        <Image
+          source={{ uri: item.image }}
+          style={styles.image}
+          onLoadStart={() => {
+            this.setState({ loading: true });
+          }}
+          onLoadEnd={() => this.setState({ loading: false })}
+        />
+      </TouchableOpacity>
+      {this.state.loading && (
+        <View
+          style={{
+            position: "absolute",
+            width: "100%",
+            height: "100%",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <ActivityIndicator size="small" color={Colors.grey} />
+        </View>
+      )}
+    </View>
+    <View style={styles.center}>
+      <CustomText style={styles.name}>{item.title}</CustomText>
+    </View>
+    <View style={styles.info}>
+      <View style={styles.rate}>
+        <AntDesign name="star" color="#fed922" size={15} />
+        <Text style={styles.score}>5.0</Text>
       </View>
+      <Number price={item.price} />
+    </View>
+    <View style={{ marginHorizontal: 5 }}>
+      <TouchableOpacity style={styles.btn} onPress={toDetail}>
+        <CustomText style={styles.detailBtn}>Xem chi tiết</CustomText>
+      </TouchableOpacity>
+    </View>
+  </View>
+</View>
+
     );
   }
 }
@@ -94,9 +98,14 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     height: 190,
-    // backgroundColor: "rgba(255, 255, 255, 0.9)",
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
     marginBottom: 15,
     borderRadius: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5, // Tăng độ nổi trên Android
   },
   image: {
     width: "100%",
@@ -110,7 +119,7 @@ const styles = StyleSheet.create({
   },
   name: {
     marginTop: 3,
-    color: Colors.lighter_green,
+    color: AppColors.primary,
     textAlign: "center",
     fontWeight: "500",
   },
@@ -141,10 +150,10 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: Colors.lighter_green,
+    borderColor: AppColors.primary,
   },
   detailBtn: {
-    color: Colors.lighter_green,
+    color: AppColors.primary,
     marginRight: 5,
   },
 });

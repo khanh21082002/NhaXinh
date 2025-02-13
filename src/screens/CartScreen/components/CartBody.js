@@ -18,11 +18,13 @@ import { CartItem } from "./CartItem";
 import Messages from "../../../messages/user";
 //PropTypes check
 import PropTypes from "prop-types";
+import { AppColors } from "../../../styles";
 
 export const CartBody = ({
   navigation,
   user,
   carts,
+  products,
   loadCarts,
   isRefreshing,
 }) => {
@@ -35,7 +37,7 @@ export const CartBody = ({
       {
         text: "Đồng ý",
         onPress: () => {
-          dispatch(removeFromCart(carts._id, itemId));
+          dispatch(removeFromCart(carts.id, itemId));
         },
       },
     ]);
@@ -51,7 +53,7 @@ export const CartBody = ({
             </TouchableOpacity>
           </View>
         </View>
-      ) : carts.items.length === 0 ? (
+      ) : carts.items?.length === 0 ? (
         <View style={styles.center}>
           <CustomText style={{ fontSize: 16 }}>
             Chưa có sản phẩm nào trong giỏ hàng
@@ -60,21 +62,28 @@ export const CartBody = ({
       ) : (
         <View style={{ marginBottom: 80 }}>
           <FlatList
-            data={carts.items}
+            data={carts.products}
             onRefresh={loadCarts}
             refreshing={isRefreshing}
-            keyExtractor={(item) => item.item._id}
+            keyExtractor={(item) => item.productId.toString()}
             renderItem={({ item }) => {
+              const productDetails = products.find(
+                (p) => p.id === item.productId
+              );
+              if (!productDetails) return null;
               return (
                 <CartItem
-                  item={item}
-                  onRemove={() => onRemove(item.item._id)}
+                  item={{
+                    ...item,
+                    product: productDetails,
+                  }}
+                  onRemove={() => onRemove(item.productId)}
                   onAdd={() => {
-                    dispatch(addToCart(item.item, user.token));
+                    dispatch(addToCart(item, user.token));
                   }}
                   onDes={() => {
-                    dispatch(decCartQuantity(carts._id, item.item._id));
-                  }}
+                    dispatch(decCartQuantity(carts.id, item.productId));
+                  }}                
                 />
               );
             }}
@@ -88,6 +97,7 @@ export const CartBody = ({
 CartBody.propTypes = {
   user: PropTypes.object.isRequired,
   carts: PropTypes.object.isRequired,
+  products: PropTypes.array.isRequired,
   loadCarts: PropTypes.func.isRequired,
   isRefreshing: PropTypes.bool.isRequired,
   navigation: PropTypes.object.isRequired,
@@ -100,9 +110,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     paddingHorizontal: 15,
     paddingVertical: 10,
-    backgroundColor: Colors.lighter_green,
+    backgroundColor: AppColors.primary,
     borderRadius: 5,
-    borderColor: Colors.lighter_green,
+    borderColor: AppColors.primary,
     marginTop: 10,
   },
   center: {

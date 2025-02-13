@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Dimensions, Alert } from "react-native";
-//Redux
+// Redux
 import { useDispatch, useSelector } from "react-redux";
-//Action
+// Actions
 import { UploadProfilePic } from "../../reducers";
 import { EditButton, ProfilePic, ProfileBody } from "./components";
-import ActionSheet from 'react-native-action-sheet';  // Cập nhật sử dụng react-native-action-sheet
-//Loader
+// Import SheetManager từ react-native-actions-sheet
+import { SheetProvider } from "react-native-actions-sheet";
+// Loader
 import Loader from "../../components/Loaders/Loader";
 
 const { width, height } = Dimensions.get("window");
@@ -20,73 +21,38 @@ export const ProfileScreen = (props) => {
   const [uploadButton, setUploadButton] = useState(true);
 
   const dispatch = useDispatch();
-  const unmounted = useRef(false);
-  useEffect(() => {
-    return () => {
-      unmounted.current = true;
-    };
-  }, []);
+
   const UploadProfile = async () => {
     try {
       await dispatch(UploadProfilePic(imageUri, filename, type));
       setUploadButton(true);
-      if (!unmounted.current) {
-        Alert.alert("Cập nhật", "Cập nhật thành công", [
-          {
-            text: "Ok",
-          },
-        ]);
-      }
+      Alert.alert("Cập nhật", "Cập nhật thành công", [{ text: "OK" }]);
     } catch (err) {
       alert(err);
     }
   };
 
-  const showActionSheet = () => {
-    const options = ['Option 1', 'Option 2', 'Cancel'];
-    const cancelButtonIndex = options.length - 1;
-    ActionSheet.showActionSheetWithOptions(
-      {
-        options,
-        cancelButtonIndex,
-      },
-      (buttonIndex) => {
-        if (buttonIndex !== cancelButtonIndex) {
-          console.log(`Selected button index: ${buttonIndex}`);
-        }
-      }
-    );
-  };
-
   return (
-    <View style={styles.container}>
-      <View style={styles.header}></View>
-      {loading ? <Loader /> : <></>}
-      <View style={styles.profileContainer}>
-        <View style={styles.profileBox}>
-          <EditButton navigation={props.navigation} user={user} />
-          <ProfilePic
-            user={user}
-            imageUri={imageUri}
-            setImageUri={setImageUri}
-            setType={setType}
-            setFilename={setFilename}
-            setUploadButton={setUploadButton}
-          />
-          <ProfileBody
-            user={user}
-            uploadButton={uploadButton}
-            setUploadButton={setUploadButton}
-            setImageUri={setImageUri}
-            loading={loading}
-            UploadProfile={UploadProfile}
-          />
+    <SheetProvider context="global">
+      <View style={styles.container}>
+        <View style={styles.header}></View>
+        {loading && <Loader />}
+        <View style={styles.profileContainer}>
+          <View style={styles.profileBox}>
+            {/* <EditButton navigation={props.navigation} user={user} /> */}
+            <ProfilePic
+              user={user}
+              imageUri={imageUri}
+              setImageUri={setImageUri}
+              setType={setType}
+              setFilename={setFilename}
+              setUploadButton={setUploadButton}
+            />
+            <ProfileBody user={user} />
+          </View>
         </View>
       </View>
-
-      {/* Action Sheet trigger */}
-      <Button title="Show Action Sheet" onPress={showActionSheet} />
-    </View>
+    </SheetProvider>
   );
 };
 
@@ -109,6 +75,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 20,
     width,
+    height,
     alignItems: "center",
   },
 });
+
+export default ProfileScreen;

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import {
   View,
   TouchableOpacity,
@@ -7,98 +7,83 @@ import {
   TextInput,
   Image,
   Platform,
+  FlatList,
+  ScrollView
 } from "react-native";
-import { Modalize } from "react-native-modalize";
-import { Portal } from "react-native-portalize";
-import { BlurView } from "@react-native-community/blur";
-import  Entypo  from "react-native-vector-icons/Entypo";
-import { useDispatch, useSelector } from "react-redux";
+import Entypo from "react-native-vector-icons/Entypo";
+import { useSelector } from "react-redux";
 import CustomText from "../../../components/UI/CustomText";
 import Colors from "../../../utils/Colors";
 import comments from "../../../db/Comments";
 import UserComment from "./UserComment";
 
-const { width, height } = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 
 export const Comments = () => {
   const user = useSelector((state) => state.auth.user);
   const [textComment, setTextComment] = useState("");
-  const modalizeRef = useRef(null);
+  const [showAllComments, setShowAllComments] = useState(false);
 
-  const onOpen = () => {
-    modalizeRef.current?.open();
-  };
+  // Toggle hiển thị tất cả bình luận
+  const handleShowMore = () => setShowAllComments(!showAllComments);
+
+  // Chỉ hiển thị 4 comment đầu nếu chưa bấm "Xem thêm"
+  const displayedComments = showAllComments ? comments : comments.slice(0, 4);
+
   return (
-    <>
-      <View style={styles.commentContainer}>
-        <TouchableOpacity onPress={onOpen}>
-          <CustomText style={styles.title}>Comments</CustomText>
-        </TouchableOpacity>
-        <CustomText style={styles.commentCount}>{comments.length}</CustomText>
-      </View>
-      <Portal>
-        <Modalize ref={modalizeRef} snapPoint={height - 200}>
-          <View style={styles.contentContainer}>
-            {Object.keys(user).length === 0 ? (
-              <></>
-            ) : (
-              <View style={styles.inputContainer}>
-                <View style={styles.profileContainer}>
-                  <Image
-                    style={styles.profilePic}
-                    source={
-                      user.profilePicture.length === 0
-                        ? require("../../../assets/images/defaultprofile.jpg")
-                        : { uri: user.profilePicture }
-                    }
-                  />
-                </View>
-                <View
-                  style={{
-                    justifyContent: "center",
-                    width: "75%",
-                  }}
-                >
-                  <BlurView tint='dark' intensity={10} style={styles.inputBlur}>
-                    <TextInput
-                      placeholder='Add a public comment...'
-                      style={{ width: "100%" }}
-                      onChangeText={(text) => setTextComment(text)}
-                    />
-                  </BlurView>
-                </View>
+    <View style={styles.commentContainer}>
+      <CustomText style={styles.title}>Bình luận</CustomText>
+      <CustomText style={styles.commentCount}>{comments.length}</CustomText>
 
-                <View
-                  style={{
-                    justifyContent: "center",
-                  }}
-                >
-                  <Entypo
-                    name='paper-plane'
-                    size={25}
-                    color={textComment.length === 0 ? Colors.grey : Colors.blue}
-                  />
-                </View>
-              </View>
-            )}
-            {comments.map((comment) => (
-              <UserComment key={comment.id} comment={comment} />
-            ))}
-          </View>
-        </Modalize>
-      </Portal>
-    </>
+      {/* Input nhập bình luận */}
+      {Object.keys(user).length !== 0 && (
+        <View style={styles.inputContainer}>
+          <Image
+            style={styles.profilePic}
+            source={
+              user.profilePicture?.length === 0
+                ? require("../../../assets/images/defaultprofile.jpg")
+                : { uri: user.profilePicture }
+            }
+          />
+          <TextInput
+            placeholder="Thêm bình luận công khai..."
+            style={styles.input}
+            onChangeText={setTextComment}
+          />
+          <Entypo
+            name="paper-plane"
+            size={25}
+            color={textComment.length === 0 ? Colors.grey : Colors.blue}
+          />
+        </View>
+      )}
+
+      {/* Danh sách bình luận */}
+      <FlatList
+        data={displayedComments}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => <UserComment comment={item} />}
+        nestedScrollEnabled = {true}
+      />
+
+      {/* Nút xem thêm */}
+      {comments.length > 4 && (
+        <TouchableOpacity onPress={handleShowMore} style={styles.showMoreButton}>
+          <CustomText style={styles.showMoreText}>
+            {showAllComments ? "Ẩn bớt" : "Xem thêm"}
+          </CustomText>
+        </TouchableOpacity>
+      )}
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   commentContainer: {
-    height: 50,
-    flexDirection: "row",
-    alignItems: "center",
+    padding: 15,
     borderTopWidth: 1,
     borderTopColor: Colors.light_grey,
-    paddingHorizontal: 20,
   },
   title: {
     fontSize: 16,
@@ -106,34 +91,37 @@ const styles = StyleSheet.create({
   },
   commentCount: {
     fontSize: 15,
-    marginHorizontal: 15,
+    marginLeft: 10,
     color: Colors.grey,
-  },
-  contentContainer: {
-    marginHorizontal: 10,
   },
   inputContainer: {
     flexDirection: "row",
-    alignContent: "center",
-    justifyContent: "space-between",
-    height: 60,
-    marginTop: 10,
+    alignItems: "center",
     borderBottomWidth: 1,
     borderBottomColor: Colors.light_grey,
+    paddingVertical: 10,
+    marginBottom: 10,
   },
-  inputBlur: {
+  input: {
+    flex: 1,
     height: 40,
-    justifyContent: "center",
+    marginLeft: 10,
+    backgroundColor: Colors.light_grey,
     borderRadius: 5,
     paddingHorizontal: 10,
   },
-  profileContainer: {
-    justifyContent: "center",
-  },
   profilePic: {
-    resizeMode: Platform.OS === "android" ? "cover" : "contain",
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+  },
+  showMoreButton: {
+    alignSelf: "center",
+    paddingVertical: 10,
+  },
+  showMoreText: {
+    fontSize: 14,
+    color: Colors.blue,
+    fontWeight: "bold",
   },
 });

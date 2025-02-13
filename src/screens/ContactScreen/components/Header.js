@@ -13,6 +13,7 @@ import Colors from "../../../utils/Colors";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 //PropTypes check
 import PropTypes from "prop-types";
+import { AppColors } from "../../../styles";
 
 const { height } = Dimensions.get("window");
 
@@ -50,7 +51,7 @@ const styles = StyleSheet.create({
   header: {
     alignItems: "center",
     height: 200,
-    backgroundColor: Colors.lighter_green,
+    backgroundColor: AppColors.primary,
     justifyContent: "center",
   },
   image: {

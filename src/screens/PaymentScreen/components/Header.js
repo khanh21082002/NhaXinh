@@ -14,6 +14,7 @@ import OrderSteps from "../../../components/UI/OrderSteps";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 //PropTypes check
 import PropTypes from "prop-types";
+import { AppColors } from "../../../styles";
 
 const { width, height } = Dimensions.get("window");
 
@@ -25,11 +26,12 @@ export const Header = ({ navigation }) => {
           style={{ position: "absolute", bottom: 20, left: 15, zIndex: 10 }}
         >
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Ionicons
-              name='ios-arrow-back'
-              size={28}
-              color={Colors.lighter_green}
-            />
+          <Image
+          source={require('../../../assets/images/icons/arrow_back.png')}
+          style={{ width: 35, height: 35 }}
+          borderRadius={8}
+          backgroundColor={AppColors.primaryLight}
+        />
           </TouchableOpacity>
         </View>
         <View style={styles.orderStepsContainer}>
@@ -66,7 +68,7 @@ const styles = StyleSheet.create({
   },
   title: {
     textAlign: "center",
-    color: Colors.lighter_green,
+    color: AppColors.primary,
     fontSize: 18,
     fontFamily: "Roboto-Medium",
   },

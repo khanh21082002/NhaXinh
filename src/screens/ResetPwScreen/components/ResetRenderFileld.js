@@ -4,6 +4,7 @@ import CustomText from "../../../components/UI/CustomText";
 //Colors
 import Colors from "../../../utils/Colors";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { AppColors } from "../../../styles";
 
 export default renderField = ({
   keyboardType,
@@ -33,7 +34,7 @@ export default renderField = ({
           <MaterialCommunityIcons
             name={icon}
             size={22}
-            color={Colors.lighter_green}
+            color={AppColors.primary}
           />
           <TextInput
             style={{
@@ -55,7 +56,7 @@ export default renderField = ({
               <MaterialCommunityIcons
                 name={!showPass ? "eye-off-outline" : "eye-outline"}
                 size={22}
-                color={Colors.lighter_green}
+                color={AppColors.primary}
               />
             </TouchableWithoutFeedback>
           ) : passIcon === "confirm" ? (
@@ -65,7 +66,7 @@ export default renderField = ({
               <MaterialCommunityIcons
                 name={!showConfirmPass ? "eye-off-outline" : "eye-outline"}
                 size={22}
-                color={Colors.lighter_green}
+                color={AppColors.primary}
               />
             </TouchableWithoutFeedback>
           ) : (

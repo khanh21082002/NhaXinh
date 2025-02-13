@@ -2,6 +2,7 @@ import React from "react";
 import { View, Dimensions } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 import Colors from "../../utils/Colors";
+import { AppColors } from "../../styles";
 
 const { width, height } = Dimensions.get("window");
 
@@ -18,7 +19,7 @@ const Loader = () => {
         justifyContent: "center",
       }}
     >
-      <ActivityIndicator size='large' color={Colors.lighter_green} />
+      <ActivityIndicator size='large' color={AppColors.primary} />
     </View>
   );
 };

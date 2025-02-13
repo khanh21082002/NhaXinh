@@ -51,13 +51,13 @@ export const AppNavigator = () => {
 
 
   // Xóa dữ liệu để lần nào cũng là lần đầu. Sau khi xong sẽ xóa
-  useEffect(() => {
-    const resetFirstTime = async () => {
-      await AsyncStorage.removeItem('isFirstTime'); // Xóa dữ liệu để lần nào cũng là lần đầu
-      setValue(null);
-    };
-    resetFirstTime();
-  }, []);
+  // useEffect(() => {
+  //   const resetFirstTime = async () => {
+  //     await AsyncStorage.removeItem('isFirstTime'); // Xóa dữ liệu để lần nào cũng là lần đầu
+  //     setValue(null);
+  //   };
+  //   resetFirstTime();
+  // }, []);
 
   return (
     <NavigationContainer ref={navigationRef}>

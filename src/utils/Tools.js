@@ -1,11 +1,13 @@
 import React, { useCallback } from 'react';
 import { TouchableOpacity, Linking, Alert } from 'react-native';
 import Colors from './Colors';
-//Upload Image
-import ImagePicker from 'react-native-image-picker';
+// Upload Image
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { PermissionsAndroid, Platform } from 'react-native';
 import { STRIPE_PUBLISHABLE_KEY, API_URL } from './Config';
+import { AppColors } from '../styles';
 
+// OpenURL component
 export const OpenURL = ({ url, children }) => {
   const handlePress = useCallback(async () => {
     // Checking if the link is supported for links with custom URL scheme.
@@ -19,26 +21,22 @@ export const OpenURL = ({ url, children }) => {
       Alert.alert(`Don't know how to open this URL: ${url}`);
     }
   }, [url]);
+
   return <TouchableOpacity onPress={handlePress}>{children}</TouchableOpacity>;
 };
 
-//Handle Deep Link
+// Handle Deep Link
 export const urlRedirect = (url) => {
   if (!url) return;
   // parse and redirect to new url
   let { path, queryParams } = Linking.parse(url);
-  // console.log(
-  //   `Linked to app with path: ${path} and data: ${JSON.stringify(
-  //     queryParams
-  //   )}`  
-  // );
   if (path) {
     RootNavigation.navigate(path, queryParams);
   }
   return;
 };
 
-//Handle Fetching timeout
+// Handle Fetching timeout
 export const timeoutPromise = (url) => {
   return new Promise((resolve, reject) => {
     const timeoutId = setTimeout(() => {
@@ -57,53 +55,74 @@ export const timeoutPromise = (url) => {
   });
 };
 
+// Pick Image function
 export const _pickImage = async (action) => {
   try {
     // Check and request permission to access camera or gallery
     if (Platform.OS === 'android') {
       const permission = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        {
+          title: 'Permission to access camera roll',
+          message: 'We need access to your camera roll to select photos.',
+        }
       );
+
+      // Check if the permission is granted
       if (permission !== PermissionsAndroid.RESULTS.GRANTED) {
-        return alert('Permission to access camera roll is required!');
+        return Alert.alert(
+          'Permission denied',
+          'Permission to access camera roll is required!'
+        );
       }
     }
 
     const options = {
-      mediaType: 'photo',
-      maxWidth: 800,
-      maxHeight: 800,
-      quality: 1,
+      mediaType: 'photo', // Specify media type as 'photo'
+      maxWidth: 800, // Set max width for the image
+      maxHeight: 800, // Set max height for the image
+      quality: 1, // Set image quality (1 is best)
     };
 
-    const type =
-      action === 'library'
-        ? ImagePicker.launchImageLibrary(options, (response) => {
-            if (response.didCancel) {
-              console.log('User cancelled image picker');
-            } else if (response.errorCode) {
-              console.log('ImagePicker Error: ', response.errorMessage);
-            } else {
-              return response;
-            }
-          })
-        : ImagePicker.launchCamera(options, (response) => {
-            if (response.didCancel) {
-              console.log('User cancelled image picker');
-            } else if (response.errorCode) {
-              console.log('ImagePicker Error: ', response.errorMessage);
-            } else {
-              return response;
-            }
-          });
+    // Handle library or camera action based on the input
+    let result;
+    if (action === 'library') {
+      result = await new Promise((resolve, reject) => {
+        launchImageLibrary(options, (response) => {
+          if (response.didCancel) {
+            reject('User cancelled image picker');
+          } else if (response.errorCode) {
+            reject(response.errorMessage);
+          } else {
+            resolve(response); // Return image response
+          }
+        });
+      });
+    } else if (action === 'camera') {
+      result = await new Promise((resolve, reject) => {
+        launchCamera(options, (response) => {
+          if (response.didCancel) {
+            reject('User cancelled image picker');
+          } else if (response.errorCode) {
+            reject(response.errorMessage);
+          } else {
+            resolve(response); // Return image response
+          }
+        });
+      });
+    }
 
-    let result = await type;
-    return result;
-  } catch (E) {
-    console.log(E);
+    // If the result is successful, return the image data
+    if (result) {
+      return result;
+    }
+  } catch (error) {
+    console.error(error);
+    Alert.alert('Error', 'An error occurred while picking the image');
   }
 };
 
+// Color Check function
 export const colorCheck = (colorCode) => {
   switch (colorCode) {
     case 'yellow':
@@ -117,11 +136,11 @@ export const colorCheck = (colorCode) => {
     case 'pink':
       return Colors.straw;
     default:
-      return Colors.lighter_green;
+      return AppColors.primary;
   }
 };
 
-//Get token from Stripe Server
+// Get token from Stripe Server
 export const getCreditCardToken = (creditCardData) => {
   const card = {
     'card[number]': creditCardData.values.number.replace(/ /g, ''),

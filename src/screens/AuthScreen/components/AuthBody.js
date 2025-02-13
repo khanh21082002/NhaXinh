@@ -13,21 +13,23 @@ import Colors from "../../../utils/Colors";
 import LottieView from "lottie-react-native";
 //PropTypes check
 import PropTypes from "prop-types";
+//Color
+import {AppColors} from "../../../styles";
 
 const { height, width } = Dimensions.get("window");
 
 export const AuthBody = ({ navigation }) => {
   return (
     <>
-      <ImageBackground
+      {/* <ImageBackground
         style={{ flex: 1, position: "absolute", height, width }}
         source={require("../../../assets/images/flower3.jpg")}
         blurRadius={10}
-      ></ImageBackground>
+      ></ImageBackground> */}
       <View style={{ position: "absolute", top: 100 }}>
         <Image
           style={styles.logo}
-          source={require("../../../assets/images/logo1.png")}
+          source={require("../../../assets/images/logo.png")}
         />
       </View>
       <LottieView
@@ -47,7 +49,7 @@ export const AuthBody = ({ navigation }) => {
           style={[
             styles.signinContainer,
             {
-              backgroundColor: Colors.leave_green,
+              backgroundColor: AppColors.primary,
               marginTop: 15,
               borderWidth: 0,
             },
@@ -69,15 +71,16 @@ const styles = StyleSheet.create({
     height: 60,
     width: width - 40,
     borderRadius: 30,
-    backgroundColor: "#ffffff",
+    backgroundColor: AppColors.primaryLight,
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 1,
-    borderColor: Colors.leave_green,
+    borderColor: AppColors.primaryLight,
   },
   text: {
     fontSize: 20,
     fontWeight: "600",
+    color: Colors.text,
   },
   logo: {
     resizeMode: "contain",

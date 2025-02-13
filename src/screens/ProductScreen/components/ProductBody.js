@@ -5,17 +5,19 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   SectionList,
+  Animated, // Dùng Animated từ react-native
 } from 'react-native';
-import Animated, { Value } from 'react-native-reanimated';
-//Color
+
+// Color
 import Colors from '../../../utils/Colors';
 import HorizontalItem from './HorizontalItem';
 import CustomText from '../../../components/UI/CustomText';
 import { Header } from './Header';
-//PropTypes check
+
+// PropTypes check
 import PropTypes from 'prop-types';
 
-ITEM_HEIGHT = 100;
+const ITEM_HEIGHT = 100;
 
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList);
 
@@ -24,47 +26,34 @@ export const ProductBody = ({
   productsFilter,
   searchFilterFunction,
 }) => {
-  const DATA = [];
-  const bracelets = productsFilter.filter(
-    (bracelet) => bracelet.type === 'bracelet',
-  );
-  const rings = productsFilter.filter((ring) => ring.type === 'ring');
-  const stones = productsFilter.filter((stone) => stone.type === 'stone');
-  DATA.push({ title: 'Vòng Chuối Ngọc', data: bracelets });
-  DATA.push({ title: 'Nhẫn Ruby', data: rings });
-  DATA.push({ title: 'Đá Quý', data: stones });
-  const scrollY = new Value(0);
+  const groupedProducts = productsFilter.reduce((acc, item) => {
+    if (!acc[item.category]) {
+      acc[item.category] = [];
+    }
+    acc[item.category].push(item);
+    return acc;
+  }, {});
+
+  const DATA = Object.keys(groupedProducts).map((category) => ({
+    title: category, // Hiển thị tên danh mục
+    data: groupedProducts[category], // Danh sách sản phẩm trong danh mục
+  }));
+
+  const scrollY = useRef(new Animated.Value(0)).current;
   const sectionListRef = useRef(null);
-  // const scrollToSection = (index) => {
-  //   sectionListRef.current.scrollToLocation({
-  //     animated: true,
-  //     sectionIndex: index,
-  //     itemIndex: 0,
-  //     viewPosition: 0,
-  //   });
-  // };
-  // const [sectionIndex, setIndex] = useState(0);
-  // const HandleScrollY = (event) => {
-  //   const y = event.nativeEvent.contentOffset.y;
-  //   const sectionIndex =
-  //     y > bracelets.length * ITEM_HEIGHT &&
-  //     y < (bracelets.length + rings.length) * ITEM_HEIGHT
-  //       ? 1
-  //       : y > (bracelets.length + rings.length) * ITEM_HEIGHT
-  //       ? 2
-  //       : 0;
-  //   setIndex(sectionIndex);
-  // };
 
   return (
     <View style={styles.container}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <Header
-          navigation={navigation}
-          searchFilterFunction={searchFilterFunction}
-          scrollY={scrollY}
-        />
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <View style={{ zIndex: 0 }}>
+          <Header
+            navigation={navigation}
+            searchFilterFunction={searchFilterFunction}
+            scrollY={scrollY}
+          />
+        </View>
       </TouchableWithoutFeedback>
+
       {productsFilter.length === 0 ? (
         <CustomText style={{ textAlign: 'center', marginTop: 110 }}>
           Không tìm thấy sản phẩm
@@ -72,7 +61,7 @@ export const ProductBody = ({
       ) : (
         <AnimatedSectionList
           sections={DATA} // REQUIRED: SECTIONLIST DATA
-          keyExtractor={(item) => item._id}
+          keyExtractor={(item, index) => (item?._id ? item._id.toString() : `item-${index}`)}
           ref={sectionListRef}
           renderSectionHeader={({ section: { title } }) => (
             <View style={styles.header}>
@@ -83,47 +72,17 @@ export const ProductBody = ({
             <HorizontalItem item={item} navigation={navigation} />
           )}
           stickySectionHeadersEnabled={false}
-          scrollEventThrottle={1}
+          scrollEventThrottle={16}
           onScroll={Animated.event(
             [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-            { useNativeDriver: true },
-            // { listener: HandleScrollY, useNativeDriver: false }
+            { useNativeDriver: true }
           )}
-          contentContainerStyle={{ marginTop: 90, paddingBottom: 100 }}
+          contentContainerStyle={{ paddingTop: 90, paddingBottom: 100 }}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+          style={{ zIndex: 1 }}
         />
       )}
-      {/* <View style={styles.tabBar}>
-        <FlatList
-          data={sectionTitle}
-          keyExtractor={(item, index) => item + index}
-          showsHorizontalScrollIndicator={false}
-          horizontal
-          renderItem={({ item, index }) => {
-            const color = index === sectionIndex ? "#7dd170" : Colors.white;
-            const textColor =
-              index === sectionIndex ? Colors.white : Colors.black;
-            console.log(index);
-            return (
-              <TouchableOpacity
-                style={{
-                  justifyContent: "center",
-                  alignItems: "center",
-                  width: 120,
-                  backgroundColor: color,
-                  borderRadius: 5,
-                }}
-                onPress={() => {
-                  scrollToSection(index);
-                }}
-              >
-                <CustomText style={{ fontSize: 16, color: textColor }}>
-                  {item}
-                </CustomText>
-              </TouchableOpacity>
-            );
-          }}
-        />
-      </View> */}
     </View>
   );
 };
@@ -131,16 +90,12 @@ export const ProductBody = ({
 ProductBody.propTypes = {
   navigation: PropTypes.object.isRequired,
   productsFilter: PropTypes.array.isRequired,
+  searchFilterFunction: PropTypes.func.isRequired,
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  tabBar: {
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   header: {
     height: 40,
@@ -149,8 +104,10 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
   },
   title: {
-    fontSize: 16,
+    fontSize: 24,
     fontWeight: '500',
-    color: Colors.lighter_green,
+    color: Colors.black,
   },
 });
+
+export default ProductBody;

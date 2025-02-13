@@ -5,12 +5,14 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ActivityIndicator,
+  Image
 } from "react-native";
 import { Field, reduxForm } from "redux-form";
 import CustomText from "../../components/UI/CustomText";
 import renderField from "./components/ForgetRenderField";
 //Colors
 import Colors from "../../utils/Colors";
+import { AppColors } from "../../styles";
 //Icon
 import Icon from 'react-native-vector-icons/Feather';
 //Redux
@@ -60,18 +62,19 @@ const SignupForm = (props) => {
         }}
         style={{ position: "absolute", top: 30, left: 20 }}
       >
-        <Icon
-          name='arrow-left-circle'
-          size={30}
-          color={Colors.lighter_green}
+        <Image
+          source={require('../../assets/images/icons/arrow_back.png')}
+          style={{ width: 35, height: 35 }}
+          borderRadius={8}
+          backgroundColor={AppColors.primaryLight}
         />
       </TouchableOpacity>
       <View style={styles.content}>
-        <CustomText style={styles.title}> Forget Password </CustomText>
+        <CustomText style={styles.title}> Vui lòng nhập email </CustomText>
         <Field
           name='email'
           keyboardType='email-address'
-          icon='email'
+          icon='mail'
           label='Email'
           component={renderField}
         />
@@ -83,7 +86,7 @@ const SignupForm = (props) => {
             {loading ? (
               <ActivityIndicator size='small' color='#fff' />
             ) : (
-              <CustomText style={styles.textSign}>NEXT</CustomText>
+              <CustomText style={styles.textSign}>Gửi</CustomText>
             )}
           </View>
         </TouchableOpacity>
@@ -102,22 +105,24 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   title: {
-    color: Colors.lighter_green,
+    color: AppColors.primary,
     fontSize: 30,
   },
   signIn: {
     width: "100%",
-    height: 45,
+    height: 55,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 5,
     flexDirection: "row",
     marginBottom: 10,
-    backgroundColor: Colors.lighter_green,
+    borderRadius: 10,
+    paddingVertical: 5,
+    backgroundColor: AppColors.primary,
   },
   textSign: {
-    fontSize: 15,
-    color: "#fff",
+    fontSize: 20,
+    color: Colors.white,
     fontWeight: "500",
   },
 });

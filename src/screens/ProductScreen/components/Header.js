@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import {
   View,
   StyleSheet,
@@ -6,57 +6,57 @@ import {
   TextInput,
   Dimensions,
   Platform,
+  Image,
+  Animated,
 } from "react-native";
-// import SearchInput from "./SearchInput";
-import Animated from "react-native-reanimated";
+
 import ShareItem from "../../../components/UI/ShareItem";
-//Color
 import Colors from "../../../utils/Colors";
 import CustomText from "../../../components/UI/CustomText";
-//icon
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import { BlurView } from "@react-native-community/blur";
-//PropTypes check
 import PropTypes from "prop-types";
+import { AppColors } from "../../../styles";
 
-const { interpolate, Extrapolate } = Animated;
 const { width } = Dimensions.get("window");
 const HEADER_HEIGHT = 180;
 const HEADER_MIN = 90;
 const HEADER_DISTANCE = HEADER_HEIGHT - HEADER_MIN;
 
 export const Header = ({ navigation, searchFilterFunction, scrollY }) => {
-  const headerHeight = interpolate(scrollY, {
+  const translateY = scrollY.interpolate({
     inputRange: [0, HEADER_DISTANCE],
     outputRange: [0, -HEADER_MIN / 2],
-    extrapolate: Extrapolate.CLAMP,
+    extrapolate: "clamp",
   });
-  const titleOpacity = interpolate(scrollY, {
+
+  const opacity = scrollY.interpolate({
     inputRange: [0, HEADER_DISTANCE],
     outputRange: [1, 0],
-    extrapolate: Extrapolate.CLAMP,
+    extrapolate: "clamp",
   });
-  const inputTranslate = interpolate(scrollY, {
+
+  const searchTranslateY = scrollY.interpolate({
     inputRange: [0, HEADER_DISTANCE],
     outputRange: [0, -HEADER_MIN + 10],
-    extrapolate: Extrapolate.CLAMP,
+    extrapolate: "clamp",
   });
-  const inputWidth = interpolate(scrollY, {
+
+  const searchScaleX = scrollY.interpolate({
     inputRange: [0, HEADER_DISTANCE],
-    outputRange: [width - 20, width - 80],
-    extrapolate: Extrapolate.CLAMP,
+    outputRange: [1, 1.1], 
+    extrapolate: "clamp",
   });
+
   return (
     <>
       <View style={styles.topBar}>
         <View style={{ position: "absolute", left: 0, top: 40, zIndex: 10 }}>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.goBack();
-            }}
-            style={styles.icon}
-          >
-            <Ionicons name="ios-arrow-back" size={25} color={Colors.white} />
+          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.icon}>
+            <Image
+              source={require("../../../assets/images/icons/arrow_back.png")}
+              style={{ width: 35, height: 35 }}
+              borderRadius={8}
+              backgroundColor={AppColors.primaryLight}
+            />
           </TouchableOpacity>
         </View>
         <View style={styles.shareItem}>
@@ -68,48 +68,29 @@ export const Header = ({ navigation, searchFilterFunction, scrollY }) => {
           />
         </View>
         <Animated.View
-          style={{
-            position: "absolute",
-            width: inputWidth,
-            height: 40,
-            transform: [{ translateY: inputTranslate }],
-            bottom: -HEADER_MIN + 20,
-          }}
+          style={[
+            styles.searchContainer,
+            { transform: [{ translateY: searchTranslateY }] },
+          ]}
         >
-          <BlurView
-            tint="dark"
-            intensity={40}
-            style={[{ width: "100%", borderRadius: 5 }]}
+          <Animated.View
+            style={[
+              styles.searchBox,
+              { transform: [{ scaleX: searchScaleX }] }, // Sửa lỗi width
+            ]}
           >
             <TextInput
               placeholder="Tìm kiếm sản phẩm"
               placeholderTextColor={Colors.white}
               clearButtonMode="always"
-              onChangeText={(text) => searchFilterFunction(text)}
-              style={{
-                height: 40,
-                marginHorizontal: 20,
-                color: Colors.white,
-              }}
+              onChangeText={searchFilterFunction}
+              style={styles.textInput}
             />
-          </BlurView>
+          </Animated.View>
         </Animated.View>
       </View>
-      <Animated.View
-        style={[
-          styles.header,
-          {
-            transform: [{ translateY: headerHeight }],
-          },
-        ]}
-      >
-        {/* <SearchInput inputValue={searchFilterFunction} /> */}
-        <Animated.View
-          style={{
-            opacity: titleOpacity,
-            height: 50,
-          }}
-        >
+      <Animated.View style={[styles.header, { transform: [{ translateY }] }]}>
+        <Animated.View style={[styles.titleContainer, { opacity }]}>
           <CustomText style={styles.title}>Tất cả sản phẩm</CustomText>
         </Animated.View>
       </Animated.View>
@@ -120,11 +101,11 @@ export const Header = ({ navigation, searchFilterFunction, scrollY }) => {
 Header.propTypes = {
   navigation: PropTypes.object.isRequired,
   searchFilterFunction: PropTypes.func.isRequired,
+  scrollY: PropTypes.object.isRequired,
 };
 
 const styles = StyleSheet.create({
   topBar: {
-    display: "flex",
     flexDirection: "row",
     justifyContent: "center",
     paddingHorizontal: 20,
@@ -138,7 +119,11 @@ const styles = StyleSheet.create({
     width: "100%",
     position: "absolute",
     height: HEADER_HEIGHT,
-    backgroundColor: Colors.lighter_green,
+    backgroundColor: AppColors.primary,
+    zIndex: 1,
+  },
+  titleContainer: {
+    height: 50,
   },
   title: {
     marginTop: Platform.OS === "android" ? 0 : 5,
@@ -160,4 +145,23 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  searchContainer: {
+    position: "absolute",
+    height: 40,
+    bottom: -HEADER_MIN + 20,
+    borderRadius: 5,
+  },
+  searchBox: {
+    backgroundColor: "rgba(0, 0, 0, 0.3)",
+    width: "100%",
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    justifyContent: "center",
+  },
+  textInput: {
+    height: 50,
+    color: Colors.white,
+  },
 });
+
+export default Header;

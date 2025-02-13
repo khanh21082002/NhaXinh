@@ -13,11 +13,12 @@ import {
   Image,
   Alert,
   Dimensions,
+  Text,
 } from 'react-native';
 //Colors
 import Colors from '../../../utils/Colors';
+import { AppColors } from '../../../styles';
 import CustomText from '../../../components/UI/CustomText';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 //Redux
 import { useDispatch, useSelector } from 'react-redux';
 //Action
@@ -35,18 +36,18 @@ const { height } = Dimensions.get('window');
 
 //Validation
 const validate = (values) => {
-  const errors = {};
-  if (!values.email) {
-    errors.email = 'Email không được bỏ trống';
-  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-    errors.email = 'Email không hơp lệ';
-  }
-  if (!values.password) {
-    errors.password = 'Mật khẩu không được bỏ trống';
-  } else if (values.password.length < 6) {
-    errors.password = 'Mật khẩu phải nhiều hơn hoặc bằng 6 ký tự';
-  }
-  return errors;
+  // const errors = {};
+  // if (!values.email) {
+  //   errors.email = 'Email không được bỏ trống';
+  // } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+  //   errors.email = 'Email không hơp lệ';
+  // }
+  // if (!values.password) {
+  //   errors.password = 'Mật khẩu không được bỏ trống';
+  // } else if (values.password.length < 6) {
+  //   errors.password = 'Mật khẩu phải nhiều hơn hoặc bằng 6 ký tự';
+  // }
+  // return errors;
 };
 
 const Login = (props) => {
@@ -98,8 +99,8 @@ const Login = (props) => {
   const submit = async (values) => {
     try {
       setLoading(true);
-       await dispatch(LoginAction(values.email, values.password));
-      props.navigation.navigate('Home');
+      await dispatch(LoginAction(values.email, values.password));
+      props.navigation.navigate('HomeTab');
     } catch (err) {
       setLoading(false);
       alert(err);
@@ -112,14 +113,25 @@ const Login = (props) => {
         onPress={() => {
           props.navigation.goBack();
         }}
-        style={{ position: 'absolute', top: 50, left: 20 }}
+        style={{ position: 'absolute', top: 40, left: 20 }}
       >
-        <Ionicons name="ios-arrow-back" size={35} color={Colors.light_green} />
+        {/* <Ionicons name="ios-arrow-back" size={35} color={Colors.light_green} /> */}
+        <Image
+          source={require('../../../assets/images/icons/arrow_back.png')}
+          style={{ width: 35, height: 35 }}
+          borderRadius={8}
+          backgroundColor={AppColors.primaryLight}
+        />
       </TouchableOpacity>
 
       <View style={styles.header}>
-        <View>
-          <CustomText style={styles.title}>LOGIN</CustomText>
+        <View style={{ marginBottom: 10 }}>
+          <View style={styles.titleContainer}>
+            <CustomText style={styles.title}>NHÀ XINH</CustomText>
+            <CustomText style={{ ...styles.title, color: Colors.text }}>xin chào!</CustomText>
+          </View>
+
+          <Text style={styles.subTitle}>Vui lòng đăng nhập để tiếp tục</Text>
         </View>
       </View>
       <ScrollView>
@@ -135,14 +147,14 @@ const Login = (props) => {
               <Field
                 name="email"
                 keyboardType="email-address"
-                label="Email"
-                icon="email"
+                label="Tên đăng nhập"
+                icon="mail"
                 component={renderField}
               />
               <Field
                 name="password"
                 keyboardType="default"
-                label="Password"
+                label="Mật khẩu"
                 component={renderField}
                 secureTextEntry={showPass ? false : true}
                 passIcon="eye"
@@ -163,19 +175,29 @@ const Login = (props) => {
                     fontFamily: 'Roboto-Medium',
                   }}
                 >
-                  Forget Password ?
+                  Quên mật khẩu?
                 </CustomText>
               </TouchableOpacity>
             </View>
             <TouchableOpacity
               onPress={handleSubmit(submit)}
-              style={{ marginVertical: 10, alignItems: 'center' }}
+              disabled={!props.valid || loading}
+              style={{
+                marginVertical: 10,
+                alignItems: 'center',
+                backgroundColor: props.valid ? AppColors.primary : AppColors.primaryLight,
+                borderRadius: 10,
+                paddingVertical: 5
+              }}
             >
               <View style={styles.signIn}>
                 {loading ? (
                   <ActivityIndicator size="small" color="#fff" />
                 ) : (
-                  <CustomText style={styles.textSign}>Đăng nhập</CustomText>
+                  <CustomText style={{
+                    ...styles.textSign,
+                    color: props.valid ? AppColors.white : AppColors.yellowLight, // Đổi màu chữ
+                  }}>Đăng nhập</CustomText>
                 )}
               </View>
             </TouchableOpacity>
@@ -183,7 +205,7 @@ const Login = (props) => {
         </TouchableWithoutFeedback>
         <View style={styles.center}>
           <CustomText style={styles.loginOpt}>
-            Hoặc đăng nhập bằng khuôn mặt/vân tay
+            Hoặc đăng nhập bằng
           </CustomText>
           <View style={styles.circleImage}>
             <TouchableOpacity
@@ -193,10 +215,45 @@ const Login = (props) => {
             >
               <Image
                 source={require('../../../assets/images/faceid.png')}
-                style={styles.faceid}
+                style={styles.img}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+            >
+              <Image
+                source={require('../../../assets/images/instagram.png')}
+                style={styles.img}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+            >
+              <Image
+                source={require('../../../assets/images/facebook.png')}
+                style={styles.img}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+            >
+              <Image
+                source={require('../../../assets/images/google.png')}
+                style={styles.img}
               />
             </TouchableOpacity>
           </View>
+        </View>
+        <View style={styles.footer}>
+          <CustomText style={[styles.textSignSmall, { marginLeft: 5 }]}>
+            Bạn chưa có mật khẩu?
+          </CustomText>
+          <TouchableOpacity
+            onPress={() => {
+              props.navigation.navigate("SignupScreen");
+            }}
+          >
+            <CustomText style={styles.textSignSmall}>
+              Đăng ký ngay
+            </CustomText>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -218,12 +275,25 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginHorizontal: 20,
   },
+  titleContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    gap: 5,
+  },
   title: {
-    color: Colors.light_green,
-    fontSize: 40,
-    letterSpacing: 5,
+    color: AppColors.primary,
+    fontSize: 30,
+    letterSpacing: 2,
     fontFamily: 'Roboto-Bold',
-    textAlign: 'center',
+    textAlign: 'left',
+  },
+  subTitle: {
+    textAlign: 'left',
+    color: AppColors.black,
+    fontSize: 12,
+    fontFamily: 'Roboto-Medium',
   },
   text: {
     color: '#fff',
@@ -233,43 +303,48 @@ const styles = StyleSheet.create({
     height: 50,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 5,
-    flexDirection: 'row',
-    backgroundColor: Colors.lighter_green,
+    // borderRadius: 5,
+    // flexDirection: 'row',
+    // backgroundColor: AppColors.primary,
   },
   textSign: {
-    fontSize: 15,
-    color: '#fff',
+    fontSize: 20,
+    color: Colors.white,
     fontFamily: 'Roboto-Medium',
   },
   textSignSmall: {
-    color: Colors.lighter_green,
+    color: AppColors.primary,
     textAlign: 'center',
   },
   center: {
     alignItems: 'center',
   },
   circleImage: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 2,
-    padding: 20,
-    borderRadius: 55,
-    borderStyle: 'dashed',
-    borderColor: Colors.grey,
+    gap: 40,
+    marginTop: 30
   },
-  faceid: {
+  img: {
     resizeMode: 'contain',
-    height: 70,
-    width: 70,
+    height: 50,
+    width: 50,
   },
   loginOpt: {
-    color: Colors.lighter_green,
+    color: AppColors.primary,
     fontFamily: 'Roboto-Medium',
     marginBottom: 10,
   },
+  footer: {
+    flexDirection: "row", // Đảm bảo nằm trên cùng một hàng
+    alignItems: "center", // Căn giữa theo chiều dọc
+    justifyContent: "center", // Căn giữa theo chiều ngang
+    marginTop: 60,
+    gap: 5
+  }
 });
 export const LoginForm = reduxForm({
-  form: 'login', // a unique identifier for this form
-  validate, // <--- validation function given to redux-form
+  form: 'login',
+  validate,
 })(Login);

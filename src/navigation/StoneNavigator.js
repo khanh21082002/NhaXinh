@@ -22,6 +22,7 @@ import { AuthScreen } from '../screens/AuthScreen';
 import { IntroScreen } from '../screens/IntroScreen';
 import { SignupScreen } from '../screens/SignupScreen';
 import { LoginScreen } from '../screens/LoginScreen';
+import { OTPScreen } from '../screens/OTPScreen';
 import { TouchIdScreen } from '../screens/TouchIdScreen';
 // Reset Screens
 import { ForgetPwScreen } from '../screens/ForgetPasswordScreen';
@@ -44,8 +45,10 @@ import { FinishOrderScreen } from '../screens/FinishOrderScreen';
 // Profile Screens
 import { ProfileScreen } from '../screens/ProfileScreen';
 import { EditProfileScreen } from '../screens/ProfileScreen';
+import { PersonalInfoScreen } from '../screens/PersonalInfo/PersonalInfoScreen';
 // redux
 import { useSelector } from 'react-redux';
+import { AppColors } from '../styles';
 
 // create Navigator
 
@@ -82,6 +85,7 @@ export const AuthStackScreen = () => (
     <AuthStack.Screen name="AuthScreen" component={AuthScreen} />
     <AuthStack.Screen name="LoginScreen" component={LoginStackScreen} />
     <AuthStack.Screen name="SignupScreen" component={SignupScreen} />
+    <AuthStack.Screen name="OTPScreen" component={OTPScreen} />
     <AuthStack.Screen name="FinishResetScreen" component={FinishResetPwScreen} />
   </AuthStack.Navigator>
 );
@@ -145,14 +149,13 @@ export const ProfileStackScreen = () => (
   <ProfileStack.Navigator
     screenOptions={{
       headerShown: false,
-      gestureEnabled: true,
-      cardOverlayEnabled: true,
-      ...TransitionPresets.ModalPresentationIOS,
+      cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
     }}
-    mode="modal"
+    // mode="modal"
   >
     <ProfileStack.Screen name="Profile" component={ProfileScreen} />
     <ProfileStack.Screen name="ProfileEdit" component={EditProfileScreen} />
+    <ProfileStack.Screen name="PersonalInfo" component={PersonalInfoScreen} />
   </ProfileStack.Navigator>
 );
 
@@ -167,7 +170,7 @@ export const HomeStackScreen = () => (
     <HomeStack.Screen
       name="Home"
       component={HomeScreen}
-      //animationEnabled: false , nằm trong option
+    //animationEnabled: false , nằm trong option
     />
     <HomeStack.Screen name="Detail" component={DetailScreen} />
     <HomeStack.Screen name="Cart" component={CartStackScreen} />
@@ -182,19 +185,26 @@ const Tab = createMaterialBottomTabNavigator();
 
 export const TabScreen = () => {
   const carts = useSelector((state) => state.cart.cartItems);
+  console.log("Carts:", carts);
+  console.log("Carts.items:", carts?.products);
+  console.log("Carts.items.length:", carts?.products?.length);
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused }) => {
           let iconName;
-          const color = focused ? Colors.lighter_green : Colors.grey;
+          const color = focused ? AppColors.primary : Colors.grey;
           if (route.name === 'HomeTab') {
             iconName = 'home';
           } else if (route.name === 'Favorite') {
             iconName = 'hearto';
           } else if (route.name === 'Cart') {
             iconName = 'shoppingcart';
+          } else if (route.name === 'Notification') {
+            iconName = 'notification';
           }
+
           return <AntDesign name={iconName} size={23} color={color} />;
         },
       })}
@@ -203,7 +213,7 @@ export const TabScreen = () => {
         height: 75,
         justifyContent: 'center',
       }}
-      activeColor={Colors.lighter_green}
+      activeColor={AppColors.primary}
       inactiveColor={Colors.grey}
     >
       <Tab.Screen
@@ -225,7 +235,14 @@ export const TabScreen = () => {
         component={CartStackScreen}
         options={() => ({
           tabBarLabel: 'Giỏ hàng',
-          tabBarBadge: carts.items.length === 0 ? null : carts.items.length,
+          tabBarBadge: carts.products?.length === 0 ? null : carts.products?.length,
+        })}
+      />
+      <Tab.Screen
+        name="Notification"
+        component={CartStackScreen}
+        options={() => ({
+          tabBarLabel: 'Thông báo',
         })}
       />
     </Tab.Navigator>
@@ -276,7 +293,7 @@ export const DrawerNavigator = () => {
                 style={{
                   fontSize: 14,
                   fontWeight: '500',
-                  color: focused ? Colors.lighter_green : Colors.grey,
+                  color: focused ? AppColors.primary : Colors.grey,
                   fontFamily: 'Roboto-Medium',
                 }}
               >
@@ -287,7 +304,7 @@ export const DrawerNavigator = () => {
               <Icon
                 name={icon}
                 size={23}
-                color={focused ? Colors.lighter_green : Colors.grey}
+                color={focused ? AppColors.primary : Colors.grey}
               />
             ),
           })}
@@ -304,7 +321,7 @@ export const DrawerNavigator = () => {
                 style={{
                   fontSize: 14,
                   fontWeight: '500',
-                  color: focused ? Colors.lighter_green : Colors.grey,
+                  color: focused ? AppColors.primary : Colors.grey,
                   fontFamily: 'Roboto-Medium',
                 }}
               >
@@ -315,7 +332,7 @@ export const DrawerNavigator = () => {
               <Icon
                 name="login"
                 size={23}
-                color={focused ? Colors.lighter_green : Colors.grey}
+                color={focused ? AppColors.primary : Colors.grey}
               />
             ),
           })}
@@ -331,7 +348,7 @@ export const DrawerNavigator = () => {
                   style={{
                     fontSize: 14,
                     fontWeight: '500',
-                    color: focused ? Colors.lighter_green : Colors.grey,
+                    color: focused ? AppColors.primary : Colors.grey,
                     fontFamily: 'Roboto-Medium',
                   }}
                 >
@@ -339,10 +356,10 @@ export const DrawerNavigator = () => {
                 </CustomText>
               ),
               drawerIcon: ({ focused }) => (
-                <MaterialCommunityIcons
+                <Icon
                   name="security"
                   size={25}
-                  color={focused ? Colors.lighter_green : Colors.grey}
+                  color={focused ? AppColors.primary : Colors.grey}
                 />
               ),
             })}
@@ -356,7 +373,7 @@ export const DrawerNavigator = () => {
                   style={{
                     fontSize: 14,
                     fontWeight: '500',
-                    color: focused ? Colors.lighter_green : Colors.grey,
+                    color: focused ? AppColors.primary : Colors.grey,
                     fontFamily: 'Roboto-Medium',
                   }}
                 >
@@ -364,10 +381,10 @@ export const DrawerNavigator = () => {
                 </CustomText>
               ),
               drawerIcon: ({ focused }) => (
-                <MaterialCommunityIcons
-                  name="face-profile"
+                <Icon
+                  name="account"
                   size={25}
-                  color={focused ? Colors.lighter_green : Colors.grey}
+                  color={focused ? AppColors.primary : Colors.grey}
                 />
               ),
             })}

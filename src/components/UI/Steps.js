@@ -4,36 +4,37 @@ import StepIndicator from 'react-native-step-indicator';
 // Sử dụng react-native-vector-icons thay vì @expo/vector-icons
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Colors from '../../utils/Colors';
+import { AppColors } from '../../styles';
 
 const secondIndicatorStyles = {
   stepIndicatorSize: 30,
   currentStepIndicatorSize: 40,
   separatorStrokeWidth: 2,
   currentStepStrokeWidth: 4,
-  stepStrokeCurrentColor: Colors.lighter_green,
+  stepStrokeCurrentColor: AppColors.primary,
   stepStrokeWidth: 2,
   separatorStrokeFinishedWidth: 3,
-  stepStrokeFinishedColor: Colors.lighter_green,
-  stepStrokeUnFinishedColor: Colors.lighter_green,
-  separatorFinishedColor: Colors.lighter_green,
+  stepStrokeFinishedColor: AppColors.primary,
+  stepStrokeUnFinishedColor: AppColors.primary,
+  separatorFinishedColor: AppColors.primary,
   separatorUnFinishedColor: '#aaaaaa',
-  stepIndicatorFinishedColor: Colors.lighter_green,
+  stepIndicatorFinishedColor: AppColors.primary,
   stepIndicatorUnFinishedColor: '#ffffff',
   stepIndicatorCurrentColor: '#ffffff',
   stepIndicatorLabelFontSize: 13,
   currentStepIndicatorLabelFontSize: 13,
-  stepIndicatorLabelCurrentColor: Colors.lighter_green,
+  stepIndicatorLabelCurrentColor: AppColors.primary,
   stepIndicatorLabelFinishedColor: '#ffffff',
   stepIndicatorLabelUnFinishedColor: '#aaaaaa',
   labelColor: '#999999',
   labelSize: 13,
-  currentStepLabelColor: Colors.lighter_green,
+  currentStepLabelColor:AppColors.primary,
 };
 
 const getStepIndicatorIconConfig = ({ position, stepStatus }) => {
   const iconConfig = {
     name: 'feed',
-    color: stepStatus === 'finished' ? '#ffffff' : Colors.lighter_green,
+    color: stepStatus === 'finished' ? '#ffffff' : AppColors.primary,
     size: 15,
   };
   switch (position) {
@@ -98,7 +99,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     textAlign: 'center',
     fontWeight: '500',
-    color: Colors.lighter_green,
+    color: AppColors.primary,
   },
   stepLabelSelected: {
     fontSize: 12,
