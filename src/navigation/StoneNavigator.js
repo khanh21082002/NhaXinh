@@ -46,9 +46,11 @@ import { FinishOrderScreen } from '../screens/FinishOrderScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
 import { EditProfileScreen } from '../screens/ProfileScreen';
 import { PersonalInfoScreen } from '../screens/PersonalInfo/PersonalInfoScreen';
+import { SettingScreen } from '../screens/SettingScreen';
 // redux
 import { useSelector } from 'react-redux';
 import { AppColors } from '../styles';
+
 
 // create Navigator
 
@@ -156,6 +158,7 @@ export const ProfileStackScreen = () => (
     <ProfileStack.Screen name="Profile" component={ProfileScreen} />
     <ProfileStack.Screen name="ProfileEdit" component={EditProfileScreen} />
     <ProfileStack.Screen name="PersonalInfo" component={PersonalInfoScreen} />
+    <ProductStack.Screen name="Setting" component={SettingScreen} />
   </ProfileStack.Navigator>
 );
 

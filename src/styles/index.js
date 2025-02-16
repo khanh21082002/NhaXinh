@@ -28,6 +28,8 @@ const AppColorsCustom = {
   background: '#ffffff',
   yellowLight: '#533C12',
   blackLight: '#F2F0F1',
+  green: '#35D62C',
+
 };
 
 // Typography Styles

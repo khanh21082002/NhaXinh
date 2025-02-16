@@ -10,7 +10,7 @@ export const ProfileBody = ({ user }) => {
     { icon: "time-outline", title: "Lịch sử mua hàng" },
     { icon: "card-outline", title: "Liên kết ngân hàng" },
     { icon: "help-circle-outline", title: "Hỗ trợ" },
-    { icon: "settings-outline", title: "Cài đặt" },
+    { icon: "settings-outline", title: "Cài đặt" , screen: "Setting"},
   ];
 
   const navigation = useNavigation();

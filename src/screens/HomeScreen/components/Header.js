@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   SafeAreaView,
   Dimensions,
@@ -8,30 +8,72 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
+  Animated,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Colors from "../../../utils/Colors";
-import Animated, {
-  useSharedValue,
-  useDerivedValue,
-  withTiming,
-  useAnimatedStyle,
-} from "react-native-reanimated";
 import SearchItem from "./SearchItem";
 import { AppColors } from "../../../styles";
 
 const { width, height } = Dimensions.get("window");
 
-export const Header = ({ products, navigation, scrollPoint, style }) => {
+export const Header = ({ products, navigation, style }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [keyword, setKeyword] = useState("");
   const [filteredProducts, setFilteredProducts] = useState([]);
 
-  const input_box_translate_x = useSharedValue(width);
-  const back_button_opacity = useSharedValue(0);
-  const content_translate_y = useSharedValue(height);
-  const content_opacity = useSharedValue(0);
-  const prevScrollY = useSharedValue(0);
+  // Animated values
+  const inputBoxTranslateX = new Animated.Value(width);
+  const backButtonOpacity = new Animated.Value(0);
+  const contentTranslateY = new Animated.Value(height);
+  const contentOpacity = new Animated.Value(0);
+  const scrollY = new Animated.Value(0); // Using Animated.Value for scroll position
+
+  useEffect(() => {
+    if (isFocused) {
+      Animated.timing(inputBoxTranslateX, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: true,
+      }).start();
+      Animated.timing(backButtonOpacity, {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: true,
+      }).start();
+      Animated.timing(contentTranslateY, {
+        toValue: 0,
+        duration: 0,
+        useNativeDriver: true,
+      }).start();
+      Animated.timing(contentOpacity, {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      Animated.timing(inputBoxTranslateX, {
+        toValue: width,
+        duration: 50,
+        useNativeDriver: true,
+      }).start();
+      Animated.timing(backButtonOpacity, {
+        toValue: 0,
+        duration: 50,
+        useNativeDriver: true,
+      }).start();
+      Animated.timing(contentTranslateY, {
+        toValue: height,
+        duration: 0,
+        useNativeDriver: true,
+      }).start();
+      Animated.timing(contentOpacity, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [isFocused]);
 
   const searchFilterFunction = (searchText) => {
     const data = products.filter((product) =>
@@ -43,38 +85,28 @@ export const Header = ({ products, navigation, scrollPoint, style }) => {
 
   const _onFocus = () => {
     setIsFocused(true);
-    input_box_translate_x.value = withTiming(0, { duration: 200 });
-    back_button_opacity.value = withTiming(1, { duration: 200 });
-    content_translate_y.value = withTiming(0, { duration: 0 });
-    content_opacity.value = withTiming(1, { duration: 200 });
   };
 
   const _onBlur = () => {
     setIsFocused(false);
     setKeyword("");
     setFilteredProducts([]);
-    console.log("Back button pressed!")
-    input_box_translate_x.value = withTiming(width, { duration: 50 });
-    back_button_opacity.value = withTiming(0, { duration: 50 });
-    content_translate_y.value = withTiming(height, { duration: 0 });
-    content_opacity.value = withTiming(0, { duration: 200 });
+    console.log("Back button pressed!");
   };
 
-  const scrollY = scrollPoint || useSharedValue(0);
   const headerPlatform = 50;
 
-  const _header_translate_y = useDerivedValue(() =>
-    withTiming(scrollY.value > headerPlatform ? -headerPlatform : 0, { duration: 200 })
-  );
+  const _headerTranslateY = scrollY.interpolate({
+    inputRange: [0, headerPlatform],
+    outputRange: [0, -headerPlatform],
+    extrapolate: "clamp",
+  });
 
-  const _header_opacity = useDerivedValue(() =>
-    withTiming(scrollY.value > headerPlatform ? 0 : 1, { duration: 200 })
-  );
-
-  const animatedHeaderStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: _header_translate_y.value }],
-    opacity: _header_opacity.value,
-  }));
+  const _headerOpacity = scrollY.interpolate({
+    inputRange: [0, headerPlatform],
+    outputRange: [1, 0],
+    extrapolate: "clamp",
+  });
 
   return (
     <>
@@ -82,11 +114,11 @@ export const Header = ({ products, navigation, scrollPoint, style }) => {
         <Animated.View
           style={[
             styles.header,
-            animatedHeaderStyle,
-            { zIndex: scrollY.value > headerPlatform ? -1 : 1000 } // Khi ẩn thì zIndex < 0
+            {
+              transform: [{ translateY: _headerTranslateY }],
+              opacity: _headerOpacity,
+            },
           ]}
-          pointerEvents={scrollY.value > headerPlatform ? "none" : "auto"}
-
         >
           <View style={styles.header_inner}>
             <Image
@@ -117,13 +149,17 @@ export const Header = ({ products, navigation, scrollPoint, style }) => {
 
         {/* Search Results */}
         {isFocused && (
-          <FlatList
+          <Animated.FlatList
             data={filteredProducts}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
               <SearchItem item={item} navigation={navigation} />
             )}
             style={styles.resultList}
+            onScroll={Animated.event(
+              [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+              { useNativeDriver: false }
+            )}
           />
         )}
       </SafeAreaView>

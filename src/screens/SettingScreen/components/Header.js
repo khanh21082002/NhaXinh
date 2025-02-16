@@ -13,7 +13,7 @@ import { AppColors } from "../../../styles";
 
 const { height } = Dimensions.get("window");
 
-export const Header = ({ navigation, user, carts }) => {
+export const Header = ({ navigation }) => {
   return (
     <View style={styles.header}>
       <TouchableOpacity
@@ -29,12 +29,7 @@ export const Header = ({ navigation, user, carts }) => {
         />
       </TouchableOpacity>
       <CustomText style={styles.titleHeader}>
-        Giỏ Hàng{" "}
-        {Object.keys(user).length === 0
-          ? ""
-          : carts.products?.length === 0
-          ? ""
-          : `(${carts.products?.length})`}
+        Cài đặt
       </CustomText>
       <View style={{ width: 15 }} />
     </View>
@@ -42,9 +37,7 @@ export const Header = ({ navigation, user, carts }) => {
 };
 
 Header.propTypes = {
-  user: PropTypes.object.isRequired,
   navigation: PropTypes.object.isRequired,
-  carts: PropTypes.object.isRequired,
 };
 
 const styles = StyleSheet.create({
@@ -67,6 +60,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: AppColors.primary,
     fontSize: 20,
+    fontWeight: "bold",
     paddingBottom: 5,
     fontFamily: "Roboto-Medium",
   },

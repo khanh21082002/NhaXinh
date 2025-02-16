@@ -65,6 +65,7 @@ export const HomeScreen = ({ navigation }) => {
         <Skeleton />
       ) : (
         <View style={styles.container}>
+          <Header products={products} navigation={navigation} />
           <Portal>
             <FloatButton />
           </Portal>
@@ -74,7 +75,7 @@ export const HomeScreen = ({ navigation }) => {
             showsVerticalScrollIndicator={false}
             ListHeaderComponent={() => (
               <>
-                <Header products={products} navigation={navigation} scrollPoint={scrollY} />
+                
                 <View style={[styles.banner, { paddingTop: 60 }]}>
                   <Carousel />
                 </View>

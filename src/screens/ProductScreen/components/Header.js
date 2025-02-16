@@ -68,16 +68,10 @@ export const Header = ({ navigation, searchFilterFunction, scrollY }) => {
           />
         </View>
         <Animated.View
-          style={[
-            styles.searchContainer,
-            { transform: [{ translateY: searchTranslateY }] },
-          ]}
+          style={[styles.searchContainer, { transform: [{ translateY: searchTranslateY }] }]}
         >
           <Animated.View
-            style={[
-              styles.searchBox,
-              { transform: [{ scaleX: searchScaleX }] }, // Sửa lỗi width
-            ]}
+            style={[styles.searchBox, { transform: [{ scaleX: searchScaleX }] }]}
           >
             <TextInput
               placeholder="Tìm kiếm sản phẩm"
@@ -107,7 +101,7 @@ Header.propTypes = {
 const styles = StyleSheet.create({
   topBar: {
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "center", // Adjusted to space elements evenly
     paddingHorizontal: 20,
     alignItems: "center",
     height: HEADER_MIN,
@@ -147,9 +141,11 @@ const styles = StyleSheet.create({
   },
   searchContainer: {
     position: "absolute",
-    height: 40,
     bottom: -HEADER_MIN + 20,
+    width: "80%", // Adjust width to 80% for better display
+    alignSelf: "center", // Center the search bar horizontally
     borderRadius: 5,
+    zIndex: 5,
   },
   searchBox: {
     backgroundColor: "rgba(0, 0, 0, 0.3)",
@@ -161,6 +157,7 @@ const styles = StyleSheet.create({
   textInput: {
     height: 50,
     color: Colors.white,
+    fontSize: 16, // Increased font size for better readability
   },
 });
 
