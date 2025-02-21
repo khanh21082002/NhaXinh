@@ -51,8 +51,8 @@ export const PreOrderScreen = (props) => {
     setError(error);
   };
   let orderItems = [];
-  cartItems.map((item) => {
-    orderItems.push({ item: item.item._id, quantity: item.quantity });
+  cartItems.products.map((item) => {
+    orderItems.push({ item: item.productId, quantity: item.quantity });
   });
 
   const fullAddress = `${address}, ${town} ,${province}`;
@@ -91,7 +91,7 @@ export const PreOrderScreen = (props) => {
     // });
   };
   useEffect(() => {
-    if (carts.items.length === 0) {
+    if (carts.items?.length === 0) {
       props.navigation.goBack();
     }
   }, [carts.items]);

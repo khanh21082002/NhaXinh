@@ -110,7 +110,7 @@ export const removeFromCart = (cartId, itemId) => {
     const user = getState().auth.user;
     try {
       const response = await timeoutPromise(
-        fetch(`${API_URL}/cart/cartitem/${cartId}`, {
+        fetch(`${API_URL}/carts/cartitem/${cartId}`, {
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",

@@ -15,6 +15,7 @@ import Snackbar from '../../components/Notification/Snackbar';
 // FloatButton
 import { Portal, Provider } from 'react-native-paper';
 import SearchItem from './components/SearchItem';
+import SearchBar from './components/SearchBar';
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 // height
@@ -65,7 +66,7 @@ export const HomeScreen = ({ navigation }) => {
         <Skeleton />
       ) : (
         <View style={styles.container}>
-          <Header products={products} navigation={navigation} />
+          {/* <Header user={user} products={products} navigation={navigation} /> */}
           <Portal>
             <FloatButton />
           </Portal>
@@ -75,10 +76,11 @@ export const HomeScreen = ({ navigation }) => {
             showsVerticalScrollIndicator={false}
             ListHeaderComponent={() => (
               <>
-                
-                <View style={[styles.banner, { paddingTop: 60 }]}>
+                <Header user={user} products={products} navigation={navigation} />
+                <View style={[styles.banner, { paddingTop: 70 }]}>
                   <Carousel />
                 </View>
+                <SearchBar onSearchChange={(text) => searchFilterFunction(text)} />
               </>
 
             )}
@@ -88,7 +90,7 @@ export const HomeScreen = ({ navigation }) => {
             keyExtractor={(item) => item}
             renderItem={({ item }) => (
               <CategorySection
-                name={item} // `item` là category name
+                name={item} 
                 data={groupedProducts[item]}
                 navigation={navigation}
               />

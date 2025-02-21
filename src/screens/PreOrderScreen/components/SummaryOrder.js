@@ -18,15 +18,15 @@ export class SummaryOrder extends React.PureComponent {
         <CustomText style={{ ...styles.title, marginVertical: 5 }}>
           Tóm tắt đơn hàng
         </CustomText>
-        <View style={{ backgroundColor: "#fff", paddingHorizontal: 10 }}>
-          {cartItems.map((item) => {
+        {/* <View style={{ backgroundColor: "#fff", paddingHorizontal: 10 }}>
+          {cartItems.products.map((item) => {
             return (
-              <View key={item.item.createdAt}>
+              <View>
                 <PreOrderItem item={item} />
               </View>
             );
           })}
-        </View>
+        </View> */}
         <View style={styles.total}>
           <CustomText
             style={{

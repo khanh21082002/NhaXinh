@@ -9,7 +9,8 @@ import CustomText from "../../../components/UI/CustomText";
 class PreOrderItem extends React.PureComponent {
   render() {
     const { item } = this.props;
-    const total = +item.quantity * +item.item.price;
+    // const total = +item.quantity * +item.item.price;
+    const total = +item.quantity;
     return (
       <View style={styles.container}>
         <View style={styles.left}>

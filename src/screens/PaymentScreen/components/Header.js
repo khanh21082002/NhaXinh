@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Dimensions,
   Platform,
+  Image
 } from "react-native";
 import Colors from "../../../utils/Colors";
 //Text

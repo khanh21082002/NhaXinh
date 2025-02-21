@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Dimensions,
   Platform,
+  Image
 } from "react-native";
 //Icon
 import Ionicons from 'react-native-vector-icons/Ionicons';

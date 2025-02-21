@@ -18,7 +18,7 @@ export const CartScreen = (props) => {
   const productList = useSelector((state) => state.store.products);
   const carts = useSelector((state) => state.cart.cartItems);
   const loading = useSelector((state) => state.cart.isLoading);
-  const cartItems = carts.products;
+  const cartItems = carts;
   const cartId = carts.id;
   const dispatch = useDispatch();
   let total = 0;
@@ -43,7 +43,7 @@ export const CartScreen = (props) => {
   }, [user.id]);
 
 
-  console.log(carts);
+  // console.log("cartItems",cartItems.id);
   return (
     <View style={styles.container}>
       <Header user={user} carts={carts} navigation={props.navigation} />
