@@ -1,11 +1,10 @@
 import React, { Component } from "react";
-import { View, Text, TextInput, StyleSheet, Dimensions } from "react-native";
+import { View, Text, TextInput, StyleSheet, Dimensions, Platform } from "react-native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 //Color
 import Colors from "../../../utils/Colors";
-//Animate
-import Animated, { Easing } from "react-native-reanimated";
 import { AppColors } from "../../../styles";
+
 //height
 const { height } = Dimensions.get("window");
 
@@ -17,47 +16,18 @@ export default class SearchInput extends Component {
       keyword: "",
       productsFilter: "",
     };
-    this.titleHeight = new Animated.Value(40);
-    this.titleopacity = new Animated.Value(1);
   }
-  _onFocus = () => {
-    Animated.timing(this.titleHeight, {
-      duration: 300,
-      toValue: 0,
-      easing: Easing.inOut(Easing.ease),
-    }).start();
-    Animated.timing(this.titleopacity, {
-      duration: 300,
-      toValue: 0,
-      easing: Easing.inOut(Easing.ease),
-    }).start();
-  };
-  _onBlur = () => {
-    Animated.timing(this.titleHeight, {
-      duration: 300,
-      toValue: 40,
-      easing: Easing.inOut(Easing.ease),
-    }).start();
-    Animated.timing(this.titleopacity, {
-      duration: 300,
-      toValue: 1,
-      easing: Easing.inOut(Easing.ease),
-    }).start();
-  };
+
   _textChangeHandler = (text) => {
     this.props.inputValue(text);
   };
+
   render() {
     return (
       <View>
-        <Animated.View
-          style={[
-            styles.title,
-            { height: this.titleHeight, opacity: this.titleOpacity },
-          ]}
-        >
+        <View style={styles.title}>
           <Text style={styles.titleText}>Tất cả sản phẩm</Text>
-        </Animated.View>
+        </View>
         <View style={styles.inputBox}>
           <Ionicons name='ios-search' size={20} color={Colors.text} />
           <TextInput
@@ -65,14 +35,13 @@ export default class SearchInput extends Component {
             clearButtonMode='always'
             style={styles.input}
             onChangeText={(text) => this._textChangeHandler(text)}
-            onFocus={this._onFocus}
-            onBlur={this._onBlur}
           />
         </View>
       </View>
     );
   }
 }
+
 const styles = StyleSheet.create({
   title: {
     marginTop: Platform.OS === "android" ? 90 : height < 668 ? 90 : 100,

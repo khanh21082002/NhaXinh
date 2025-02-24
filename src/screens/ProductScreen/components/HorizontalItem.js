@@ -1,69 +1,61 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
-  Image,
+  Text,
   StyleSheet,
+  Image,
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
-//Color
+import AntDesign from "react-native-vector-icons/AntDesign";
 import Colors from "../../../utils/Colors";
-import { BlurView } from "@react-native-community/blur";
-//icon
-import  AntDesign  from "react-native-vector-icons/AntDesign";
-//Text
+import Number from "../../../components/UI/NumberFormat";
 import CustomText from "../../../components/UI/CustomText";
-//NumberFormat
-import NumberFormat from "../../../components/UI/NumberFormat";
-//PropTypes check
 import PropTypes from "prop-types";
-import { AppColors } from "../../../styles";
 
-const HorizontalItem = ({ item, navigation }) => {
-  const [isLoading, setIsLoading] = useState(true);
-  return (
-    <View style={{ backgroundColor: Colors.white }}>
-      <View tint="dark" intensity={10} style={styles.itemContainer}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("Detail", { item: item })}
-          style={{ marginLeft: 5, width: "40%", marginRight: 10 }}
-        >
+export class HorizontalItem extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = { loading: true };
+  }
+
+  render() {
+    const { navigation, item } = this.props;
+    const toDetail = () => {
+      navigation.navigate("Detail", { item });
+    };
+
+    return (
+      <TouchableOpacity onPress={toDetail} style={styles.container}>
+        {/* Hình ảnh sản phẩm */}
+        <View style={styles.imageContainer}>
           <Image
-            style={{
-              height: 90,
-              width: "100%",
-              resizeMode: "stretch",
-              borderRadius: 15,
-            }}
             source={{ uri: item.image }}
-            onLoadStart={() => {
-              setIsLoading(true);
-            }}
-            onLoadEnd={() => setIsLoading(false)}
+            style={styles.image}
+            onLoadStart={() => this.setState({ loading: true })}
+            onLoadEnd={() => this.setState({ loading: false })}
           />
-          {isLoading && (
-            <ActivityIndicator
-              size="small"
-              color={Colors.grey}
-              style={{ position: "absolute", left: 0, right: 0, top: 40 }}
-            />
-          )}
-        </TouchableOpacity>
-        <View style={styles.info}>
-          <CustomText style={styles.title}>{item.title}</CustomText>
-          <CustomText style={styles.subText}>Xuất xứ {item.origin}</CustomText>
-          <View style={styles.rateContainer}>
-            <View style={styles.rate}>
-              <AntDesign name="star" color="#fed922" size={15} />
-              <CustomText style={styles.score}>{item.rating.rate}</CustomText>
+          {this.state.loading && (
+            <View style={styles.loading}>
+              <ActivityIndicator size="small" color={Colors.grey} />
             </View>
-            <NumberFormat price={item.price} />
+          )}
+        </View>
+        <View style={styles.infoContainer}>
+          <CustomText style={styles.name} numberOfLines={1}>
+            {item.title.length > 20 ? item.title.substring(0, 20) + "..." : item.title}
+          </CustomText>
+          <View style={styles.priceContainer}>
+            <Number price={item.price} style={styles.price} />
+            <TouchableOpacity style={styles.cartButton}>
+              <AntDesign name="shoppingcart" size={20} color="white" />
+            </TouchableOpacity>
           </View>
         </View>
-      </View>
-    </View>
-  );
-};
+      </TouchableOpacity>
+    );
+  }
+}
 
 HorizontalItem.propTypes = {
   item: PropTypes.object.isRequired,
@@ -71,44 +63,84 @@ HorizontalItem.propTypes = {
 };
 
 const styles = StyleSheet.create({
-  itemContainer: {
-    height: 100,
-    flexDirection: "row",
-     backgroundColor: AppColors.primaryLight,
-    marginHorizontal: 10,
-    marginBottom: 5,
-    borderRadius: 5,
+  container: {
+    width: 180,
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    paddingBottom: 10,
+    marginBottom: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5,
+    position: "relative",
+    marginRight: 8,
+    overflow: "hidden",
+  },
+  imageContainer: {
+    width: "100%",
+    height: 140,
     alignItems: "center",
+    justifyContent: "center",
   },
-  info: {
+  image: {
+    width: "100%",
     height: "100%",
-    flexDirection: "column",
-    justifyContent: "flex-start",
-    paddingVertical: 10,
-    width: "60%",
+    resizeMode: "contain",
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
   },
-  title: {
-    fontSize: 15,
+  loading: {
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    alignItems: "center",
+    justifyContent: "center",
   },
-  subText: {
-    fontSize: 13,
-    color: Colors.grey,
-    marginVertical: 10,
+  newLabel: {
+    position: "absolute",
+    top: 10,
+    left: 10,
+    backgroundColor: "#FFC107",
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 5,
   },
-  rateContainer: {
+  newText: {
+    color: "#000",
+    fontSize: 12,
+    fontWeight: "bold",
+  },
+  infoContainer: {
+    paddingHorizontal: 10,
+    paddingTop: 10,
+  },
+  name: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#333",
+    textAlign: "left",
+    width: 180, 
+    overflow: "hidden", 
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+  },
+  priceContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    width: "70%",
+    alignItems: "center",
+    marginTop: 5,
   },
-  rate: {
-    flexDirection: "row",
-    alignItems: "flex-end",
-    paddingBottom: 5,
+  price: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#000",
   },
-  score: {
-    fontSize: 12,
-    marginLeft: 5,
-    color: Colors.grey,
+  cartButton: {
+    backgroundColor: "#000",
+    padding: 8,
+    borderRadius: 20,
   },
 });
 

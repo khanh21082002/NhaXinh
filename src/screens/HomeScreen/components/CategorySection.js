@@ -29,7 +29,6 @@ export class CategorySection extends React.PureComponent {
 
     return (
       <View style={styles.category}>
-        {/* Header: Tiêu đề + View All */}
         <View style={styles.header}>
           <CustomText style={styles.title}>{name}</CustomText>
           <TouchableOpacity onPress={() => navigation.navigate("Product")}>

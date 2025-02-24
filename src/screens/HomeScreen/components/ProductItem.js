@@ -128,6 +128,9 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: "#333",
     textAlign: "left",
+    overflow: "hidden", 
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
   },
   priceContainer: {
     flexDirection: "row",
