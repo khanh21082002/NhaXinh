@@ -75,11 +75,11 @@ export const ProfilePic = ({
             transform: [{ translateY: -110 }, { translateX: -5 }],
           }}
         >
-          {/* <View style={styles.cameraContainer}>
+          <View style={styles.cameraContainer}>
             <TouchableOpacity onPress={UploadProfileHandler}>
               <FontAwesome name="camera" size={15} color="white" />
             </TouchableOpacity>
-          </View> */}
+          </View>
         </View>
       </View>
       <CustomText style={styles.userName}>{user.name.firstname + " " + user.name.lastname}</CustomText>

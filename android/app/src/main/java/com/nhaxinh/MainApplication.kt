@@ -1,4 +1,5 @@
 package com.nhaxinh
+import com.viromedia.bridge.ReactViroPackage
 
 import android.app.Application
 import com.facebook.react.PackageList
@@ -12,6 +13,7 @@ import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.react.soloader.OpenSourceMergedSoMapping
 import com.facebook.soloader.SoLoader
 
+
 class MainApplication : Application(), ReactApplication {
 
   override val reactNativeHost: ReactNativeHost =
@@ -20,6 +22,9 @@ class MainApplication : Application(), ReactApplication {
             PackageList(this).packages.apply {
               // Packages that cannot be autolinked yet can be added manually here, for example:
               // add(MyReactNativePackage())
+
+              add(ReactViroPackage(ReactViroPackage.ViroPlatform.AR))
+              
             }
 
         override fun getJSMainModuleName(): String = "index"

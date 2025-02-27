@@ -47,9 +47,17 @@ import { ProfileScreen } from '../screens/ProfileScreen';
 import { EditProfileScreen } from '../screens/ProfileScreen';
 import { PersonalInfoScreen } from '../screens/PersonalInfo/PersonalInfoScreen';
 import { SettingScreen } from '../screens/SettingScreen';
+
+//Notification Screens
+import { NotificationScreen } from '../screens/NotificationScreen';
+
+//Ar Screens
+
 // redux
 import { useSelector } from 'react-redux';
 import { AppColors } from '../styles';
+import ARScreen from '../screens/ARScreen/ARScreen';
+
 
 
 // create Navigator
@@ -124,11 +132,17 @@ const CartStack = createStackNavigator();
 export const CartStackScreen = () => (
   <CartStack.Navigator screenOptions={{ headerShown: false }}>
     <CartStack.Screen name="CartScreen" component={CartScreen} />
-
     <CartStack.Screen name="PreOrderScreen" component={PreOrderScreen} />
     <CartStack.Screen name="Payment" component={PaymentStackScreen} />
     <CartStack.Screen name="AddCreditCardScreen" component={AddCreditCardScreen} />
   </CartStack.Navigator>
+);
+
+const NotificationStack = createStackNavigator();
+export const NotificationStackScreen = () => (
+  <NotificationStack.Navigator screenOptions={{ headerShown: false }}>
+    <NotificationStack.Screen name="NotificationScreen" component={NotificationScreen} />
+  </NotificationStack.Navigator>
 );
 
 const ProductStack = createStackNavigator();
@@ -141,7 +155,8 @@ export const ProductStackScreen = () => (
   >
     <ProductStack.Screen name="ProductScreen" component={ProductScreen} />
     <ProductStack.Screen name="DetailScreen" component={DetailScreen} />
-    <ProductStack.Screen name="CartScreen" component={CartStackScreen} />
+    <ProductStack.Screen name="CartScreen" component={CartScreen} />
+    
   </ProductStack.Navigator>
 );
 
@@ -179,6 +194,7 @@ export const HomeStackScreen = () => (
     <HomeStack.Screen name="Cart" component={CartStackScreen} />
     <HomeStack.Screen name="Product" component={ProductStackScreen} />
     <HomeStack.Screen name="FinishOrder" component={FinishOrderScreen} />
+    <HomeStack.Screen name="AR" component={ARScreen} />
     <HomeStack.Screen name="ResetPw" component={ResetPwScreen} />
   </HomeStack.Navigator>
 );
@@ -243,7 +259,7 @@ export const TabScreen = () => {
       />
       <Tab.Screen
         name="Notification"
-        component={CartStackScreen}
+        component={NotificationStackScreen}
         options={() => ({
           tabBarLabel: 'Thông báo',
         })}

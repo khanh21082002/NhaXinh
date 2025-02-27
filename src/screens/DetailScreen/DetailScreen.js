@@ -41,37 +41,36 @@ export const DetailScreen = (props) => {
   return (
     <View style={styles.container}>
       {showSnackbar && <Snackbar checkVisible={showSnackbar} message={message} />}
-      
-      <FlatList
-        data={[{}]} // Chỉ để kích hoạt danh sách
-        keyExtractor={(_, index) => index.toString()}
-        ListHeaderComponent={
-          <>
-            <Header navigation={props.navigation} scrollY={scrollY} item={item} />
-            <DetailBody item={item} color={color} />
-          </>
-        }
-        ListFooterComponent={<Comments />}
-        showsVerticalScrollIndicator={false}
-      />
+          <FlatList
+            data={[{}]} // Chỉ để kích hoạt danh sách
+            keyExtractor={(_, index) => index.toString()}
+            ListHeaderComponent={
+              <>
+                <Header navigation={props.navigation} scrollY={scrollY} item={item} />
+                <DetailBody item={item} color={color} />
+              </>
+            }
+            ListFooterComponent={<Comments />}
+            showsVerticalScrollIndicator={false}
+          />
 
-      <ActionButton
-        item={item}
-        FavoriteProducts={FavoriteProducts}
-        setShowSnackbar={setShowSnackbar}
-        setModalVisible={setModalVisible}
-        setMessage={setMessage}
-        user={user}
-        color={color}
-      />
+          <ActionButton
+            item={item}
+            FavoriteProducts={FavoriteProducts}
+            setShowSnackbar={setShowSnackbar}
+            setModalVisible={setModalVisible}
+            setMessage={setMessage}
+            user={user}
+            color={color}
+          />
 
-      <ModalComp
-        item={item}
-        color={color}
-        modalVisible={modalVisible}
-        setModalVisible={setModalVisible}
-        navigation={props.navigation}
-      />
+          <ModalComp
+            item={item}
+            color={color}
+            modalVisible={modalVisible}
+            setModalVisible={setModalVisible}
+            navigation={props.navigation}
+          />
     </View>
   );
 };

@@ -107,17 +107,46 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+    packagingOptions {
+       // Chọn thư viện đầu tiên cho các nền tảng ARM
+        pickFirst 'lib/armeabi-v7a/libarcore_sdk_jni.so'
+        pickFirst 'lib/arm64-v8a/libarcore_sdk_jni.so'
+        // Chọn thư viện đầu tiên cho nền tảng x86
+        pickFirst 'lib/x86/libarcore_sdk_jni.so'
+        // Chọn thư viện đầu tiên cho nền tảng x86_64
+        pickFirst 'lib/x86_64/libarcore_sdk_jni.so'
+
+        // Thêm pickFirst cho thư viện libarcore_sdk_c.so
+        pickFirst 'lib/armeabi-v7a/libarcore_sdk_c.so'
+        pickFirst 'lib/arm64-v8a/libarcore_sdk_c.so'
+        pickFirst 'lib/x86/libarcore_sdk_c.so'
+        pickFirst 'lib/x86_64/libarcore_sdk_c.so'
+    }
 }
 
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
+    implementation platform('com.google.firebase:firebase-bom:33.8.0')
+
+    // Thêm thư viện ARCore chính thức
+    implementation 'com.google.ar:core:1.45.0'
+
+    // https://viro-community.readme.io/docs/installation-instructions#2-in-your-androidappbuildgradle-add-the-following-lines-to-the-dependencies-section
+    implementation project(path: ':react_viro')
+    implementation project(path: ':viro_renderer')
+    implementation 'androidx.media3:media3-exoplayer:1.1.1'
+    implementation 'androidx.media3:media3-exoplayer-dash:1.1.1'
+    implementation 'androidx.media3:media3-exoplayer-hls:1.1.1'
+    implementation 'androidx.media3:media3-exoplayer-smoothstreaming:1.1.1'
+    implementation 'com.google.protobuf.nano:protobuf-javanano:3.1.0'
+    // ========================================================================
 
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {
         implementation jscFlavor
     }
-
-    implementation platform('com.google.firebase:firebase-bom:33.8.0')
+   
 }
+

@@ -4,6 +4,7 @@ import { TextInput } from "react-native-paper";
 import CustomText from "../../../components/UI/CustomText";
 //Colors
 import Colors from "../../../utils/Colors";
+import { AppColors } from "../../../styles";
 
 export default renderField = ({
   label,
@@ -24,7 +25,7 @@ export default renderField = ({
         <TextInput
           label={label}
           mode='outlined'
-          theme={{ colors: { primary: Colors.leave_green } }}
+          theme={{ colors: { primary: AppColors.primary } }}
           selectionColor={Colors.leave_green}
           style={{
             marginVertical: 10,
