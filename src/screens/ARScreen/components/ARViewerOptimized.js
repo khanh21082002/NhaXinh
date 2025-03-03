@@ -1,31 +1,35 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
   ViroARScene,
-  ViroARSceneNavigator,
-  ViroText,
   ViroTrackingStateConstants,
-  ViroBox,
-  ViroMaterials,
-  ViroAnimations,
   ViroNode,
   Viro3DObject,
   ViroAmbientLight,
+  ViroMaterials,
+  ViroDirectionalLight,
+  ViroARPlaneSelector,  // Import ARPlaneSelector
+  ViroSpotLight
 } from "@reactvision/react-viro";
-import {
-  StyleSheet,
-  PermissionsAndroid,
-  Platform,
-} from "react-native";
-import { NativeModules } from "react-native";
-import RNFS from 'react-native-fs';
+import { StyleSheet } from "react-native";
 
-// Scene hiển thị AR
-const ARViewerOptimized = () => {
-  const [text, setText] = useState("Đang khởi tạo AR...");
+// Tạo vật liệu cho đối tượng 3D
+ViroMaterials.createMaterials({
+  heart: {
+    lightingModel: "Blinn",
+    diffuseTexture: require("../../../assets/3D/Heart_D3.jpg"),
+    specularTexture: require("../../../assets/3D/Heart_S2.jpg"),
+    writesToDepthBuffer: true,
+    readsFromDepthBuffer: true,
+  },
+});
+
+const ARViewerWithGestures = () => {
   const [isTracking, setIsTracking] = useState(false);
   const [showObject, setShowObject] = useState(false);
+  const [position, setPosition] = useState([0, 0, -1]);
+  const [scale, setScale] = useState([1, 1, 1]);
+  const [rotation, setRotation] = useState([0, 0, 0]);
   const timerRef = useRef(null);
-  const animationRef = useRef(null);
 
   useEffect(() => {
     // Cleanup function
@@ -33,14 +37,14 @@ const ARViewerOptimized = () => {
       if (timerRef.current) {
         clearTimeout(timerRef.current);
       }
-      setShowObject(false); // Stop showing 3D object when component unmounts
+      setShowObject(false);
     };
   }, []);
 
   const load3DModel = async () => {
-    const fileName = 'Koltuk.obj';
+    const fileName = "Koltuk.obj";
     const localPath = `${RNFS.DocumentDirectoryPath}/${fileName}`;
-    
+
     try {
       const fileExists = await RNFS.exists(localPath);
       if (!fileExists) {
@@ -55,7 +59,8 @@ const ARViewerOptimized = () => {
   };
 
   const downloadModels = async (localPath) => {
-    const modelUrl = 'https://github.com/nainglynndw/react-native-ar-viewer/releases/download/v1/AR-Code-1678076062111.usdz';
+    const modelUrl =
+      "https://github.com/nainglynndw/react-native-ar-viewer/releases/download/v1/AR-Code-1678076062111.usdz";
     try {
       await RNFS.downloadFile({
         fromUrl: modelUrl,
@@ -63,7 +68,7 @@ const ARViewerOptimized = () => {
       }).promise;
       console.log(`Downloaded model to: ${localPath}`);
     } catch (error) {
-      console.warn('Lỗi khi tải mô hình:', error);
+      console.warn("Lỗi khi tải mô hình:", error);
     }
   };
 
@@ -72,54 +77,70 @@ const ARViewerOptimized = () => {
 
     if (state === ViroTrackingStateConstants.TRACKING_NORMAL) {
       setIsTracking(true);
-      setText("Nhấn vào màn hình để tạo vật thể 3D");
 
       if (timerRef.current) clearTimeout(timerRef.current);
       timerRef.current = setTimeout(() => {
-        // setShowObject(true);
+        setShowObject(true);
         load3DModel();
       }, 2000);
     } else {
       setIsTracking(false);
       setShowObject(false);
-
-      if (state === ViroTrackingStateConstants.TRACKING_UNAVAILABLE) {
-        setText("Không thể tracking - Kiểm tra camera và môi trường");
-      } else if (state === ViroTrackingStateConstants.TRACKING_LIMITED) {
-        setText("Tracking hạn chế - Di chuyển camera để quét môi trường");
-      }
     }
   }
 
-  function onTap() {
-    if (isTracking) {
-      setShowObject(!showObject);
+  // Xử lý sự kiện kéo (drag)
+  const handleDrag = (dragToPos, source) => {
+    setPosition(dragToPos);
+  };
+
+  // Xử lý sự kiện pinch (phóng to/thu nhỏ)
+  const handlePinch = (pinchState, scaleFactor, source) => {
+    if (pinchState === 3) { // STATE_CHANGED
+      setScale([scale[0] * scaleFactor, scale[1] * scaleFactor, scale[2] * scaleFactor]);
     }
-  }
+  };
+
+  // Xử lý sự kiện xoay
+  const handleRotate = (rotateState, rotationFactor, source) => {
+    if (rotateState === 3) { // STATE_CHANGED
+      let currentRotation = [rotation[0] - rotationFactor, rotation[1] - rotationFactor, rotation[2]- rotationFactor];
+      setRotation(currentRotation);
+    }
+  };
+
+  // Điều chỉnh vị trí của vật thể khi chọn mặt phẳng
+  const onPlaneUpdate = (plane) => {
+    if (plane && plane.center) {
+      setPosition(plane.center);
+    }
+  };
 
   return (
-    <ViroARScene onTrackingUpdated={onInitialized} onTap={onTap}>
-      <ViroAmbientLight />
-      <ViroText
-        text={text}
-        scale={[0.5, 0.5, 0.5]}
-        position={[0, 0, -1]}
-        style={styles.helloWorldTextStyle}
-      />
+    <ViroARScene onTrackingUpdated={onInitialized}>
+      <ViroAmbientLight color="#ffffff" />
+      {/* Selector for planes */}
+      <ViroARPlaneSelector onPlaneUpdate={onPlaneUpdate} />
       
       {showObject && (
         <Viro3DObject
-          source={{ uri: `file://${RNFS.DocumentDirectoryPath}/Koltuk.obj` }}
-          position={[0, -0.5, -1]}
-          scale={[0.3, 0.3, 0.3]}
+          source={require("../../../assets/3D/heart.obj")}
+          materials={["heart"]}
+          position={position}
+          scale={scale}
+          rotation={rotation}
+          onDrag={handleDrag}
+          onPinch={handlePinch}
+          onRotate={handleRotate}
           type="OBJ"
+          shadowCastingBitMask={2}
         />
       )}
     </ViroARScene>
   );
 };
 
-export default ARViewerOptimized;
+export default ARViewerWithGestures;
 
 const styles = StyleSheet.create({
   helloWorldTextStyle: {

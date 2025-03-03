@@ -10,4 +10,11 @@ const { wrapWithReanimatedMetroConfig } = require('react-native-reanimated/metro
 const config = wrapWithReanimatedMetroConfig(getDefaultConfig(__dirname));
 
 module.exports = mergeConfig(config, {
-});
+    resolver: {
+      assetExts: [
+        ...getDefaultConfig(__dirname).resolver.assetExts,
+        'obj', 
+        'mtl', 
+      ],
+    },
+  });
