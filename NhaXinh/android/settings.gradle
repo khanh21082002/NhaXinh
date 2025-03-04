@@ -1,0 +1,10 @@
+pluginManagement { includeBuild("../node_modules/@react-native/gradle-plugin") }
+plugins { id("com.facebook.react.settings") }
+extensions.configure(com.facebook.react.ReactSettingsExtension){ ex -> ex.autolinkLibrariesFromCommand() }
+rootProject.name = 'NhaXinh'
+include ':app'
+includeBuild('../node_modules/@react-native/gradle-plugin')
+
+include ':react_viro', ':viro_renderer'
+project(':react_viro').projectDir = new File('../node_modules/@reactvision/react-viro/android/react_viro')
+project(':viro_renderer').projectDir = new File('../node_modules/@reactvision/react-viro/android/viro_renderer')
